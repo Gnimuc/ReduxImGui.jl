@@ -1,0 +1,13 @@
+name = "ReduxImGui"
+uuid = "2942bb7f-8771-44f1-92a4-d070ac7ae132"
+authors = ["Yupei Qi <qiyupei@gmail.com>"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
