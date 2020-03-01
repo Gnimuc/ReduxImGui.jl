@@ -3,8 +3,14 @@ uuid = "2942bb7f-8771-44f1-92a4-d070ac7ae132"
 authors = ["Yupei Qi <qiyupei@gmail.com>"]
 version = "0.1.0"
 
+[deps]
+CImGui = "5d785b6c-b76f-510e-a07c-3070796c7e87"
+Redux = "6d653af8-ad40-11e9-2720-9f1294ef7658"
+
 [compat]
-julia = "1"
+CImGui = "~1.75.0"
+Redux = "0.1"
+julia = "1.3"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
