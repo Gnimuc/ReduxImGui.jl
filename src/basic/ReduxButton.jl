@@ -5,45 +5,53 @@ using CImGui
 import CImGui: ImVec2
 
 # actions
+abstract type AbstractButtonAction <: AbstractSyncAction end
+
 """
-    RenameTo(label)
-Change button label to `label`.
+    Rename(label, new_label)
+Change button's label to `new_label`.
 Note that renaming may also change the identifier, please refer to `help?> CImGui.PushID`.
 """
-struct RenameTo <: AbstractSyncAction
+struct Rename <: AbstractButtonAction
     label::String
+    new_label::String
 end
 
 """
-    ResizeTo(x, y)
+    Resize(label, x, y)
 Change button size to (x,y).
 """
-struct ResizeTo <: AbstractSyncAction
+struct Resize <: AbstractButtonAction
+    label::String
     x::Cfloat
     y::Cfloat
 end
 
 """
-    WidthTo(w)
+    ChangeWidth(label, w)
 Change button width to `w`.
 """
-struct WidthTo <: AbstractSyncAction
+struct ChangeWidth <: AbstractButtonAction
+    label::String
     width::Cfloat
 end
 
 """
-    HeightTo(h)
+    ChangeHeight(label, h)
 Change button height to `h`.
 """
-struct HeightTo <: AbstractSyncAction
+struct ChangeHeight <: AbstractButtonAction
+    label::String
     height::Cfloat
 end
 
 """
-    Toggle()
+    Toggle(label)
 Toggle button's `is_clicked` state.
 """
-struct Toggle <: AbstractSyncAction end
+struct Toggle <: AbstractButtonAction
+    label::String
+end
 
 # state
 struct State <: AbstractImmutableState
@@ -57,16 +65,38 @@ State(label::AbstractString) = State(label, ImVec2(0,0))
 # reducers
 button(state::AbstractState, action::AbstractAction) = state
 button(state::Vector{<:AbstractState}, action::AbstractAction) = state
-button(s::State, a::RenameTo) = State(a.label, s.size, s.is_clicked)
-button(s::State, a::ResizeTo) = State(s.label, ImVec2(a.x, a.y), s.is_clicked)
-button(s::State, a::WidthTo) = State(s.label, ImVec2(a.width, s.size.y), s.is_clicked)
-button(s::State, a::HeightTo) = State(s.label, ImVec2(s.size.x, a.height), s.is_clicked)
+button(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
+
+function button(state::Dict{String,State}, action::AbstractButtonAction)
+    s = Dict{String,State}()
+    for (k,v) in state
+        s[k] = k == action.label ? button(v, action) : v
+    end
+    return s
+end
+
+function button(state::Dict{String,State}, action::Rename)
+    s = Dict{String,State}()
+    for (k,v) in state
+        if k == action.label
+            s[action.new_label] = button(v, action)
+        else
+            s[k] = v
+        end
+    end
+    return s
+end
+
+button(s::State, a::Rename) = State(a.new_label, s.size, s.is_clicked)
+button(s::State, a::Resize) = State(s.label, ImVec2(a.x, a.y), s.is_clicked)
+button(s::State, a::ChangeWidth) = State(s.label, ImVec2(a.width, s.size.y), s.is_clicked)
+button(s::State, a::ChangeHeight) = State(s.label, ImVec2(s.size.x, a.height), s.is_clicked)
 button(s::State, a::Toggle) = State(s.label, s.size, !s.is_clicked)
 
 # helper
 function Button(store::AbstractStore, state::State)
     is_clicked = CImGui.Button(state.label, state.size)
-    is_clicked && dispatch!(store, Toggle())
+    is_clicked && dispatch!(store, Toggle(state.label))
     return is_clicked
 end
 

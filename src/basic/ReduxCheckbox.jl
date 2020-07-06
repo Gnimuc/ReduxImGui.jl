@@ -4,38 +4,48 @@ using Redux
 using CImGui
 
 # actions
+abstract type AbstractCheckboxAction <: AbstractSyncAction end
+
 """
-    RenameTo(label)
-Change checkbox label to `label`.
+    Rename(label, new_label)
+Change checkbox's label to `new_label`.
 Note that renaming may also change the identifier, please refer to `help?> CImGui.PushID`.
 """
-struct RenameTo <: AbstractSyncAction
+struct Rename <: AbstractCheckboxAction
+    label::String
+    new_label::String
+end
+
+"""
+    Toggle(label)
+Toggle checkbox.
+"""
+struct Toggle <: AbstractCheckboxAction
     label::String
 end
 
 """
-    Toggle()
-Toggle checkbox.
-"""
-struct Toggle <: AbstractSyncAction end
-
-"""
-    Check()
+    Check(label)
 Set checkbox to be checked.
 """
-struct Check <: AbstractSyncAction end
+struct Check <: AbstractCheckboxAction
+    label::String
+end
 
 """
-    Uncheck()
+    Uncheck(label)
 Set checkbox to be unchecked.
 """
-struct Uncheck <: AbstractSyncAction end
+struct Uncheck <: AbstractCheckboxAction
+    label::String
+end
 
 """
-    SetTo(is_check)
-Set checkbox state to be the same as `is_check`.
+    SetTo(label, is_check)
+Set checkbox state to `is_check`.
 """
-struct SetTo <: AbstractSyncAction
+struct SetTo <: AbstractCheckboxAction
+    label::String
     is_check::Bool
 end
 
@@ -49,7 +59,29 @@ State(label::AbstractString) = State(label, false)
 # reducers
 checkbox(state::AbstractState, action::AbstractAction) = state
 checkbox(state::Vector{<:AbstractState}, action::AbstractAction) = state
-checkbox(s::State, a::RenameTo) = State(a.label, s.is_check)
+checkbox(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
+
+function checkbox(state::Dict{String,State}, action::AbstractCheckboxAction)
+    s = Dict{String,State}()
+    for (k,v) in state
+        s[k] = k == action.label ? checkbox(v, action) : v
+    end
+    return s
+end
+
+function checkbox(state::Dict{String,State}, action::Rename)
+    s = Dict{String,State}()
+    for (k,v) in state
+        if k == action.label
+            s[action.new_label] = checkbox(v, action)
+        else
+            s[k] = v
+        end
+    end
+    return s
+end
+
+checkbox(s::State, a::Rename) = State(a.new_label, s.is_check)
 checkbox(s::State, a::Toggle) = State(s.label, !s.is_check)
 checkbox(s::State, a::Check) = State(s.label, true)
 checkbox(s::State, a::Uncheck) = State(s.label, false)
@@ -59,7 +91,7 @@ checkbox(s::State, a::SetTo) = State(s.label, a.is_check)
 function Checkbox(store::AbstractStore, state::State)
     check_ref = Ref(state.is_check)
     is_pressed = CImGui.Checkbox(state.label, check_ref)
-    is_pressed && dispatch!(store, SetTo(check_ref[]))
+    is_pressed && dispatch!(store, SetTo(state.label, check_ref[]))
     return is_pressed
 end
 
