@@ -8,7 +8,7 @@ CImGui = "5d785b6c-b76f-510e-a07c-3070796c7e87"
 Redux = "6d653af8-ad40-11e9-2720-9f1294ef7658"
 
 [compat]
-CImGui = "~1.75.0"
+CImGui = "1.77.0"
 Redux = "0.1"
 julia = "1.3"
 
