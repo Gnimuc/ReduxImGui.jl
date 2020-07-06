@@ -64,19 +64,7 @@ checkbox(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 function checkbox(state::Dict{String,State}, action::AbstractCheckboxAction)
     s = Dict{String,State}()
     for (k,v) in state
-        s[k] = k == action.label ? checkbox(v, action) : v
-    end
-    return s
-end
-
-function checkbox(state::Dict{String,State}, action::Rename)
-    s = Dict{String,State}()
-    for (k,v) in state
-        if k == action.label
-            s[action.new_label] = checkbox(v, action)
-        else
-            s[k] = v
-        end
+        s[k] = v.label == action.label ? checkbox(v, action) : v
     end
     return s
 end

@@ -12,8 +12,8 @@ include("ui/button.jl")
 include("ui/checkbox.jl")
 
 ## init states and create store
-APP_BASIC_BUTTON_STATE = Dict("Button"=>ReduxButton.State("Button"))
-APP_BASIC_CHECKBOX_STATE = Dict("checkbox"=>ReduxCheckbox.State("checkbox"))
+APP_BASIC_BUTTON_STATE = Dict("basic_button"=>ReduxButton.State("Button"))
+APP_BASIC_CHECKBOX_STATE = Dict("basic_checkbox"=>ReduxCheckbox.State("checkbox"))
 
 APP_BASIC_STATE = AppBasic.State(APP_BASIC_BUTTON_STATE,
                                  APP_BASIC_CHECKBOX_STATE)

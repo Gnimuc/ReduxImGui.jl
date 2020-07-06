@@ -70,19 +70,7 @@ button(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 function button(state::Dict{String,State}, action::AbstractButtonAction)
     s = Dict{String,State}()
     for (k,v) in state
-        s[k] = k == action.label ? button(v, action) : v
-    end
-    return s
-end
-
-function button(state::Dict{String,State}, action::Rename)
-    s = Dict{String,State}()
-    for (k,v) in state
-        if k == action.label
-            s[action.new_label] = button(v, action)
-        else
-            s[k] = v
-        end
+        s[k] = v.label == action.label ? button(v, action) : v
     end
     return s
 end
