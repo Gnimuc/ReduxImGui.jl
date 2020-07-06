@@ -1,0 +1,3 @@
+[deps]
+ReduxImGui = "2942bb7f-8771-44f1-92a4-d070ac7ae132"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"

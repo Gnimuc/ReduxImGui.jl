@@ -1,4 +1,5 @@
 using ReduxImGui
+using ReduxImGui.Redux
 using Test
 
 @testset "ReduxButton" begin
