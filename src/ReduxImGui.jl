@@ -5,8 +5,13 @@ using CImGui
 
 include("basic/ReduxButton.jl")
 using .ReduxButton
-import .ReduxButton: Button, is_on
+import .ReduxButton: Button, is_on, get_label, get_size
 export ReduxButton
+
+include("basic/ReduxColorButton.jl")
+using .ReduxColorButton
+import .ReduxColorButton: ColorButton, get_color, get_hovered_color, get_active_color
+export ReduxColorButton
 
 include("basic/ReduxCheckbox.jl")
 using .ReduxCheckbox

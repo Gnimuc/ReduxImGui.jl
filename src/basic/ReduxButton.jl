@@ -88,8 +88,8 @@ Return `true` when pressed. It also maintains a `is_clicked` state which can be
 used to implement an on/off button, see also [`is_on`](@ref).
 """
 function Button(store::AbstractStore, state::State)
-    is_clicked = CImGui.Button(state.label, state.size)
-    is_clicked && dispatch!(store, Toggle(state.label))
+    is_clicked = CImGui.Button(get_label(state), get_size(state))
+    is_clicked && dispatch!(store, Toggle(get_label(state)))
     return is_clicked
 end
 
@@ -98,5 +98,13 @@ end
 Return `true` when the button is on.
 """
 is_on(s::State) = s.is_clicked
+
+"""
+    get_label(s::State) -> String
+Return the button label/identifier.
+"""
+get_label(s::State) = s.label
+
+get_size(s::State) = s.size
 
 end # module
