@@ -82,13 +82,21 @@ button(s::State, a::ChangeHeight) = State(s.label, ImVec2(s.size.x, a.height), s
 button(s::State, a::Toggle) = State(s.label, s.size, !s.is_clicked)
 
 # helper
+"""
+    Button(store::AbstractStore, state::State) -> Bool
+Return `true` when pressed. It also maintains a `is_clicked` state which can be
+used to implement an on/off button, see also [`is_on`](@ref).
+"""
 function Button(store::AbstractStore, state::State)
     is_clicked = CImGui.Button(state.label, state.size)
     is_clicked && dispatch!(store, Toggle(state.label))
     return is_clicked
 end
 
+"""
+    is_on(s::State) -> Bool
+Return `true` when the button is on.
+"""
 is_on(s::State) = s.is_clicked
-is_off(s::State) = !is_on(s)
 
 end # module

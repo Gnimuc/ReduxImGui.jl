@@ -76,11 +76,21 @@ checkbox(s::State, a::Uncheck) = State(s.label, false)
 checkbox(s::State, a::SetTo) = State(s.label, a.is_check)
 
 # helper
+"""
+    Checkbox(store::AbstractStore, state::State) -> Bool
+Return `true` when pressed. See also [`is_check`](@ref).
+"""
 function Checkbox(store::AbstractStore, state::State)
     check_ref = Ref(state.is_check)
     is_pressed = CImGui.Checkbox(state.label, check_ref)
     is_pressed && dispatch!(store, SetTo(state.label, check_ref[]))
     return is_pressed
 end
+
+"""
+    is_check(s::State) -> Bool
+Return `true` when the checkbox is checked.
+"""
+is_check(s::State) = s.is_check
 
 end # module
