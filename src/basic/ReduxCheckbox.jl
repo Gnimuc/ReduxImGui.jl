@@ -63,7 +63,7 @@ checkbox(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
 function checkbox(state::Dict{String,State}, action::AbstractCheckboxAction)
     s = Dict{String,State}()
-    for (k,v) in state
+    for (k, v) in state
         s[k] = v.label == action.label ? checkbox(v, action) : v
     end
     return s
@@ -77,10 +77,11 @@ checkbox(s::State, a::SetTo) = State(s.label, a.is_check)
 
 # helper
 """
-    Checkbox(store::AbstractStore, state::State) -> Bool
+    Checkbox(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when pressed. See also [`is_check`](@ref).
 """
-function Checkbox(store::AbstractStore, state::State)
+function Checkbox(store::AbstractStore, get_state=Redux.get_state)
+    state = get_state(store)
     check_ref = Ref(state.is_check)
     is_pressed = CImGui.Checkbox(state.label, check_ref)
     is_pressed && dispatch!(store, SetTo(state.label, check_ref[]))

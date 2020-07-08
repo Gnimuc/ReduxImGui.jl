@@ -18,7 +18,7 @@ struct SetButtonColorTo <: AbstractColorButtonAction
     label::String
     color::ImVec4
 end
-SetButtonColorTo(label, h, s, v) = SetButtonColorTo(label, CImGui.HSV(h,s,v))
+SetButtonColorTo(label, h, s, v) = SetButtonColorTo(label, CImGui.HSV(h, s, v))
 
 """
     SetHoveredColorTo(label, h, s, v)
@@ -29,7 +29,7 @@ struct SetHoveredColorTo <: AbstractColorButtonAction
     label::String
     color::ImVec4
 end
-SetHoveredColorTo(label, h, s, v) = SetHoveredColorTo(label, CImGui.HSV(h,s,v))
+SetHoveredColorTo(label, h, s, v) = SetHoveredColorTo(label, CImGui.HSV(h, s, v))
 
 """
     SetActiveColorTo(label, h, s, v)
@@ -40,7 +40,7 @@ struct SetActiveColorTo <: AbstractColorButtonAction
     label::String
     color::ImVec4
 end
-SetActiveColorTo(label, h, s, v) = SetActiveColorTo(label, CImGui.HSV(h,s,v))
+SetActiveColorTo(label, h, s, v) = SetActiveColorTo(label, CImGui.HSV(h, s, v))
 
 # state
 struct State <: AbstractImmutableState
@@ -49,11 +49,13 @@ struct State <: AbstractImmutableState
     hovered_color::ImVec4
     active_color::ImVec4
 end
-State(label::AbstractString, size) = State(ReduxButton.State(label, size),
-                                           CImGui.HSV(4/7.0, 0.6, 0.6),
-                                           CImGui.HSV(4/7.0, 0.7, 0.7),
-                                           CImGui.HSV(4/7.0, 0.8, 0.8))
-State(label::AbstractString) = State(label, ImVec2(0,0))
+State(label::AbstractString, size) = State(
+    ReduxButton.State(label, size),
+    CImGui.HSV(4 / 7.0, 0.6, 0.6),
+    CImGui.HSV(4 / 7.0, 0.7, 0.7),
+    CImGui.HSV(4 / 7.0, 0.8, 0.8),
+)
+State(label::AbstractString) = State(label, ImVec2(0, 0))
 
 # reducers
 color_button(state::AbstractState, action::AbstractAction) = state
@@ -62,7 +64,7 @@ color_button(state::Dict{String,<:AbstractState}, action::AbstractAction) = stat
 
 function color_button(state::Dict{String,State}, action::AbstractButtonAction)
     s = Dict{String,State}()
-    for (k,v) in state
+    for (k, v) in state
         s[k] = get_label(v) == action.label ? ReduxButton.button(v, action) : v
     end
     return s
@@ -70,7 +72,7 @@ end
 
 function color_button(state::Dict{String,State}, action::AbstractColorButtonAction)
     s = Dict{String,State}()
-    for (k,v) in state
+    for (k, v) in state
         s[k] = get_label(v) == action.label ? color_button(v, action) : v
     end
     return s
@@ -82,10 +84,11 @@ color_button(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.
 
 # helper
 """
-    ColorButton(store::AbstractStore, state::State) -> Bool
+    ColorButton(store::AbstractStore, get_state=Redux.get_state) -> Bool
 A wrapper over [`ReduxButton.Button`](@ref) with additional color states.
 """
-function ColorButton(store::AbstractStore, state::State)
+function ColorButton(store::AbstractStore, get_state=Redux.get_state)
+    state = get_state(store)
     CImGui.PushStyleColor(CImGui.ImGuiCol_Button, get_color(state))
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonHovered, get_hovered_color(state))
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(state))
@@ -105,9 +108,9 @@ is_on(s::State) = ReduxButton.is_on(s.button)
     get_label(s::State) -> String
 Return the button label/identifier.
 """
-get_label(s::State) = s.button.label
+get_label(s::State) = get_label(s.button)
 
-get_size(s::State) = s.button.size
+get_size(s::State) = get_size(s.button)
 
 get_color(s::State) = s.button_color
 get_hovered_color(s::State) = s.hovered_color

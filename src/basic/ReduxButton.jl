@@ -70,7 +70,7 @@ button(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 function button(state::Dict{String,State}, action::AbstractButtonAction)
     s = Dict{String,State}()
     for (k,v) in state
-        s[k] = v.label == action.label ? button(v, action) : v
+        s[k] = get_label(v) == action.label ? button(v, action) : v
     end
     return s
 end
@@ -83,11 +83,12 @@ button(s::State, a::Toggle) = State(s.label, s.size, !s.is_clicked)
 
 # helper
 """
-    Button(store::AbstractStore, state::State) -> Bool
+    Button(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when pressed. It also maintains a `is_clicked` state which can be
 used to implement an on/off button, see also [`is_on`](@ref).
 """
-function Button(store::AbstractStore, state::State)
+function Button(store::AbstractStore, get_state=Redux.get_state)
+    state = get_state(store)
     is_clicked = CImGui.Button(get_label(state), get_size(state))
     is_clicked && dispatch!(store, Toggle(get_label(state)))
     return is_clicked

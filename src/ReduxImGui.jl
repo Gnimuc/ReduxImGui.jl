@@ -23,4 +23,9 @@ using .ReduxRadioButton
 import .ReduxRadioButton: RadioButton, is_active
 export ReduxRadioButton
 
+include("basic/ReduxArrowButton.jl")
+using .ReduxArrowButton
+import .ReduxArrowButton: ArrowButton
+export ReduxArrowButton
+
 end # module
