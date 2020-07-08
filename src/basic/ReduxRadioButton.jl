@@ -2,7 +2,6 @@ module ReduxRadioButton
 
 using Redux
 using CImGui
-import CImGui: ImVec2
 
 # actions
 abstract type AbstractRadioButtonAction <: AbstractSyncAction end

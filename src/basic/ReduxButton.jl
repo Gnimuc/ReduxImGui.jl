@@ -3,6 +3,7 @@ module ReduxButton
 using Redux
 using CImGui
 import CImGui: ImVec2
+import ..ReduxImGui: get_label
 
 # actions
 abstract type AbstractButtonAction <: AbstractSyncAction end

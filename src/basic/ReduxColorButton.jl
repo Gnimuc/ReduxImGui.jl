@@ -4,7 +4,8 @@ using Redux
 using CImGui
 import CImGui: ImVec2, ImVec4
 using ..ReduxButton
-import ..ReduxButton: AbstractButtonAction, is_on, get_label, get_size
+import ..ReduxButton: AbstractButtonAction, is_on, get_size
+import ..ReduxImGui: get_label
 
 # actions
 abstract type AbstractColorButtonAction <: AbstractButtonAction end

@@ -2,7 +2,6 @@ module ReduxArrowButton
 
 using Redux
 using CImGui
-import CImGui: ImVec2
 
 # actions
 abstract type AbstractArrowButtonAction <: AbstractSyncAction end

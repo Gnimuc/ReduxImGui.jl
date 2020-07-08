@@ -3,9 +3,11 @@ module ReduxImGui
 using Redux
 using CImGui
 
+function get_label end
+
 include("basic/ReduxButton.jl")
 using .ReduxButton
-import .ReduxButton: Button, is_on, get_label, get_size
+import .ReduxButton: Button, is_on, get_size
 export ReduxButton
 
 include("basic/ReduxColorButton.jl")
@@ -27,5 +29,10 @@ include("basic/ReduxArrowButton.jl")
 using .ReduxArrowButton
 import .ReduxArrowButton: ArrowButton
 export ReduxArrowButton
+
+include("combo/ReduxCombo.jl")
+using .ReduxCombo
+import .ReduxCombo: Combo
+export ReduxCombo
 
 end # module
