@@ -1,4 +1,4 @@
-module ReduxButton
+module RigButton
 
 using Redux
 using CImGui

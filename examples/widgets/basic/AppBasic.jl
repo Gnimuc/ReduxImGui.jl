@@ -3,27 +3,27 @@ module AppBasic
 using ReduxImGui
 using ReduxImGui.Redux
 
-include("repeater.jl")
-using .ReduxRepeater
+include("RigRepeater.jl")
+using .RigRepeater
 
 # state
 struct State <: AbstractImmutableState
-    buttons::Dict{String,ReduxButton.State}
-    checkboxes::Dict{String,ReduxCheckbox.State}
-    radio_buttons::Dict{String,ReduxRadioButton.State}
-    color_buttons::Dict{String,ReduxColorButton.State}
-    repeaters::Dict{String,ReduxRepeater.State}
-    combos::Dict{String,ReduxCombo.State}
+    buttons::Dict{String,RigButton.State}
+    checkboxes::Dict{String,RigCheckbox.State}
+    radio_buttons::Dict{String,RigRadioButton.State}
+    color_buttons::Dict{String,RigColorButton.State}
+    repeaters::Dict{String,RigRepeater.State}
+    combos::Dict{String,RigCombo.State}
 end
 
 # reducers
 function app_basic(state::AbstractState, action::AbstractAction)
-    next_button_state = ReduxButton.button(state.buttons, action)
-    next_checkbox_state = ReduxCheckbox.checkbox(state.checkboxes, action)
-    next_radio_button_state = ReduxRadioButton.radio_button(state.radio_buttons, action)
-    next_color_button_state = ReduxColorButton.color_button(state.color_buttons, action)
-    next_repeater_state = ReduxRepeater.repeater(state.repeaters, action)
-    next_combo_state = ReduxCombo.combo(state.combos, action)
+    next_button_state = RigButton.button(state.buttons, action)
+    next_checkbox_state = RigCheckbox.checkbox(state.checkboxes, action)
+    next_radio_button_state = RigRadioButton.radio_button(state.radio_buttons, action)
+    next_color_button_state = RigColorButton.color_button(state.color_buttons, action)
+    next_repeater_state = RigRepeater.repeater(state.repeaters, action)
+    next_combo_state = RigCombo.combo(state.combos, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,

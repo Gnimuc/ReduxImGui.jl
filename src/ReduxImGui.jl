@@ -5,34 +5,34 @@ using CImGui
 
 function get_label end
 
-include("basic/ReduxButton.jl")
-using .ReduxButton
-import .ReduxButton: Button, is_on, get_size
-export ReduxButton
+include("basic/RigButton.jl")
+using .RigButton
+import .RigButton: Button, is_on, get_size
+export RigButton
 
-include("basic/ReduxColorButton.jl")
-using .ReduxColorButton
-import .ReduxColorButton: ColorButton, get_color, get_hovered_color, get_active_color
-export ReduxColorButton
+include("basic/RigColorButton.jl")
+using .RigColorButton
+import .RigColorButton: ColorButton, get_color, get_hovered_color, get_active_color
+export RigColorButton
 
-include("basic/ReduxCheckbox.jl")
-using .ReduxCheckbox
-import .ReduxCheckbox: Checkbox, is_check
-export ReduxCheckbox
+include("basic/RigCheckbox.jl")
+using .RigCheckbox
+import .RigCheckbox: Checkbox, is_check
+export RigCheckbox
 
-include("basic/ReduxRadioButton.jl")
-using .ReduxRadioButton
-import .ReduxRadioButton: RadioButton, is_active
-export ReduxRadioButton
+include("basic/RigRadioButton.jl")
+using .RigRadioButton
+import .RigRadioButton: RadioButton, is_active
+export RigRadioButton
 
-include("basic/ReduxArrowButton.jl")
-using .ReduxArrowButton
-import .ReduxArrowButton: ArrowButton
-export ReduxArrowButton
+include("basic/RigArrowButton.jl")
+using .RigArrowButton
+import .RigArrowButton: ArrowButton
+export RigArrowButton
 
-include("combo/ReduxCombo.jl")
-using .ReduxCombo
-import .ReduxCombo: Combo
-export ReduxCombo
+include("combo/RigCombo.jl")
+using .RigCombo
+import .RigCombo: Combo
+export RigCombo
 
 end # module

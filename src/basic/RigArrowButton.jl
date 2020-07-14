@@ -1,4 +1,4 @@
-module ReduxArrowButton
+module RigArrowButton
 
 using Redux
 using CImGui

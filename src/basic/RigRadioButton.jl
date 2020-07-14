@@ -1,4 +1,4 @@
-module ReduxRadioButton
+module RigRadioButton
 
 using Redux
 using CImGui

@@ -1,10 +1,10 @@
-module ReduxColorButton
+module RigColorButton
 
 using Redux
 using CImGui
 import CImGui: ImVec2, ImVec4
-using ..ReduxButton
-import ..ReduxButton: AbstractButtonAction, is_on, get_size
+using ..RigButton
+import ..RigButton: AbstractButtonAction, is_on, get_size
 import ..ReduxImGui: get_label
 
 # actions
@@ -45,13 +45,13 @@ SetActiveColorTo(label, h, s, v) = SetActiveColorTo(label, CImGui.HSV(h, s, v))
 
 # state
 struct State <: AbstractImmutableState
-    button::ReduxButton.State
+    button::RigButton.State
     button_color::ImVec4
     hovered_color::ImVec4
     active_color::ImVec4
 end
 State(label::AbstractString, size) = State(
-    ReduxButton.State(label, size),
+    RigButton.State(label, size),
     CImGui.HSV(4 / 7.0, 0.6, 0.6),
     CImGui.HSV(4 / 7.0, 0.7, 0.7),
     CImGui.HSV(4 / 7.0, 0.8, 0.8),
@@ -66,7 +66,7 @@ color_button(state::Dict{String,<:AbstractState}, action::AbstractAction) = stat
 function color_button(state::Dict{String,State}, action::AbstractButtonAction)
     s = Dict{String,State}()
     for (k, v) in state
-        s[k] = get_label(v) == action.label ? ReduxButton.button(v, action) : v
+        s[k] = get_label(v) == action.label ? RigButton.button(v, action) : v
     end
     return s
 end
@@ -86,7 +86,7 @@ color_button(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.
 # helper
 """
     ColorButton(store::AbstractStore, get_state=Redux.get_state) -> Bool
-A wrapper over [`ReduxButton.Button`](@ref) with additional color states.
+A wrapper over [`RigButton.Button`](@ref) with additional color states.
 """
 function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     state = get_state(store)
@@ -95,7 +95,7 @@ function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(state))
     is_clicked = CImGui.Button(get_label(state), get_size(state))
     CImGui.PopStyleColor(3)
-    is_clicked && dispatch!(store, ReduxButton.Toggle(get_label(state)))
+    is_clicked && dispatch!(store, RigButton.Toggle(get_label(state)))
     return is_clicked
 end
 
@@ -103,7 +103,7 @@ end
     is_on(s::State) -> Bool
 Return `true` when the button is on.
 """
-is_on(s::State) = ReduxButton.is_on(s.button)
+is_on(s::State) = RigButton.is_on(s.button)
 
 """
     get_label(s::State) -> String
