@@ -14,6 +14,7 @@ struct State <: AbstractImmutableState
     color_buttons::Dict{String,RigColorButton.State}
     repeaters::Dict{String,RigRepeater.State}
     combos::Dict{String,RigCombo.State}
+    input_texts::Dict{String,RigInputText.State}
 end
 
 # reducers
@@ -24,12 +25,14 @@ function app_basic(state::AbstractState, action::AbstractAction)
     next_color_button_state = RigColorButton.color_button(state.color_buttons, action)
     next_repeater_state = RigRepeater.repeater(state.repeaters, action)
     next_combo_state = RigCombo.combo(state.combos, action)
+    next_input_text_state = RigInputText.input_text(state.input_texts, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
                  next_color_button_state,
                  next_repeater_state,
-                 next_combo_state)
+                 next_combo_state,
+                 next_input_text_state)
 end
 
 end # module

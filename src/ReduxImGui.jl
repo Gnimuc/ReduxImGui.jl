@@ -35,4 +35,9 @@ using .RigCombo
 import .RigCombo: Combo
 export RigCombo
 
+include("input/RigInputText.jl")
+using .RigInputText
+import .RigInputText: InputText, get_string
+export RigInputText
+
 end # module

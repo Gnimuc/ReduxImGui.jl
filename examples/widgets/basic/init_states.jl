@@ -44,6 +44,14 @@ APP_BASIC_COMBO_STATE = Dict(
     ),
 )
 
+APP_BASIC_INPUTTEXT_STATE = Dict(
+    "basic_input_text" => RigInputText.State(
+        "input text",
+        size = 280,
+        buffer = "Hello, world!" * "\0"^267,
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -51,4 +59,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_COLORBUTTON_STATE,
     APP_BASIC_REPEATER_STATE,
     APP_BASIC_COMBO_STATE,
+    APP_BASIC_INPUTTEXT_STATE,
 )
