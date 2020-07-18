@@ -105,14 +105,8 @@ Return `true` when the button is on.
 """
 is_on(s::State) = RigButton.is_on(s.button)
 
-"""
-    get_label(s::State) -> String
-Return the button label/identifier.
-"""
 get_label(s::State) = get_label(s.button)
-
 get_size(s::State) = get_size(s.button)
-
 get_color(s::State) = s.button_color
 get_hovered_color(s::State) = s.hovered_color
 get_active_color(s::State) = s.active_color

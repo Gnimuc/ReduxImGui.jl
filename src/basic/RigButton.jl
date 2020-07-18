@@ -101,10 +101,6 @@ Return `true` when the button is on.
 """
 is_on(s::State) = s.is_clicked
 
-"""
-    get_label(s::State) -> String
-Return the button label/identifier.
-"""
 get_label(s::State) = s.label
 
 get_size(s::State) = s.size

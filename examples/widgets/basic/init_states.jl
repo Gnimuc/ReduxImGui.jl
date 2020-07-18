@@ -52,6 +52,12 @@ APP_BASIC_INPUTTEXT_STATE = Dict(
     ),
 )
 
+APP_BASIC_INPUTINT_STATE = Dict(
+    "basic_input_int" => RigInputInt.State(
+        "input int",
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -60,4 +66,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_REPEATER_STATE,
     APP_BASIC_COMBO_STATE,
     APP_BASIC_INPUTTEXT_STATE,
+    APP_BASIC_INPUTINT_STATE,
 )

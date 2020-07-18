@@ -3,6 +3,10 @@ module ReduxImGui
 using Redux
 using CImGui
 
+"""
+    get_label(s::State) -> String
+Return the button label/identifier.
+"""
 function get_label end
 
 include("basic/RigButton.jl")
@@ -39,5 +43,10 @@ include("input/RigInputText.jl")
 using .RigInputText
 import .RigInputText: InputText, get_string
 export RigInputText
+
+include("input/RigInputInt.jl")
+using .RigInputInt
+import .RigInputInt: InputInt, get_values
+export RigInputInt
 
 end # module

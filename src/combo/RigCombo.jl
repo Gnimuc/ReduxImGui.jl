@@ -132,10 +132,6 @@ function Combo(store::AbstractStore, get_state=Redux.get_state)
     return is_opened
 end
 
-"""
-    get_label(s::State) -> String
-Return the combo label/identifier.
-"""
 get_label(s::State) = s.label
 
 """

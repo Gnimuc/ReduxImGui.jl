@@ -17,6 +17,7 @@ include("ui/color_buttons.jl")
 include("ui/arrow_button.jl")
 include("ui/combo.jl")
 include("ui/input_text.jl")
+include("ui/input_int.jl")
 
 ## init states and create store
 include("init_states.jl")
@@ -56,6 +57,7 @@ function ui(store::AbstractStore)
         CImGui.LabelText("label", "Value")
         naive_combo(store)
         naive_input_text(store)
+        naive_input_int(store)
 
         CImGui.TreePop()
     end

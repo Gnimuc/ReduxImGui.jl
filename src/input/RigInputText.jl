@@ -71,10 +71,6 @@ function InputText(store::AbstractStore, get_state=Redux.get_state)
     return is_triggered
 end
 
-"""
-    get_label(s::State) -> String
-Return the label/identifier.
-"""
 get_label(s::State) = s.label
 
 """
