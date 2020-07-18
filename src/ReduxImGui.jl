@@ -44,6 +44,11 @@ using .RigInputText
 import .RigInputText: InputText, get_string
 export RigInputText
 
+include("input/RigInputTextWithHint.jl")
+using .RigInputTextWithHint
+import .RigInputTextWithHint: InputTextWithHint
+export RigInputTextWithHint
+
 include("input/RigInputInt.jl")
 using .RigInputInt
 import .RigInputInt: InputInt, get_values

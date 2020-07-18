@@ -10,12 +10,10 @@ using .Renderer
 
 include("../../utils.jl")
 
-include("ui/button.jl")
+include("ui/buttons.jl")
 include("ui/checkbox.jl")
-include("ui/radio_button.jl")
-include("ui/color_buttons.jl")
-include("ui/arrow_button.jl")
 include("ui/combo.jl")
+include("ui/repeater.jl")
 include("ui/input_text.jl")
 include("ui/input_int.jl")
 
@@ -57,6 +55,7 @@ function ui(store::AbstractStore)
         CImGui.LabelText("label", "Value")
         naive_combo(store)
         naive_input_text(store)
+        naive_input_text_with_hint(store)
         naive_input_int(store)
 
         CImGui.TreePop()

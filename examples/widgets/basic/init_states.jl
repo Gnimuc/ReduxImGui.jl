@@ -52,6 +52,13 @@ APP_BASIC_INPUTTEXT_STATE = Dict(
     ),
 )
 
+APP_BASIC_INPUTTEXTWITHHINT_STATE = Dict(
+    "basic_input_text_with_hint" => RigInputTextWithHint.State(
+        "input text (w/ hint)",
+        "enter text here",
+    ),
+)
+
 APP_BASIC_INPUTINT_STATE = Dict(
     "basic_input_int" => RigInputInt.State(
         "input int",
@@ -66,5 +73,6 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_REPEATER_STATE,
     APP_BASIC_COMBO_STATE,
     APP_BASIC_INPUTTEXT_STATE,
+    APP_BASIC_INPUTTEXTWITHHINT_STATE,
     APP_BASIC_INPUTINT_STATE,
 )

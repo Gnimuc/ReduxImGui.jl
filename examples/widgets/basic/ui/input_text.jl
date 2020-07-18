@@ -10,3 +10,9 @@ function naive_input_text(store::AbstractStore)
     CImGui.SameLine()
     ShowHelpMarker("USER:\nHold SHIFT or use mouse to select text.\n"*"CTRL+Left/Right to word jump.\n"*"CTRL+A or double-click to select all.\n"*"CTRL+X,CTRL+C,CTRL+V clipboard.\n"*"CTRL+Z,CTRL+Y undo/redo.\n"*"ESCAPE to revert.")
 end
+
+function naive_input_text_with_hint(store::AbstractStore)
+    if ReduxImGui.InputTextWithHint(store, s->get_state(s).input_text_with_hints["basic_input_text_with_hint"])
+        @info "This triggers $(@__FILE__):$(@__LINE__)."
+    end
+end

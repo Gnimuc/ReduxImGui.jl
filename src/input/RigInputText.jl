@@ -58,8 +58,6 @@ function input_text(s::State, a::ChangeSize)
     return State(s.label, a.size, string(s.buffer, new_buf), s.flags)
 end
 
-
-
 # helper
 """
     InputText(store::AbstractStore, get_state=Redux.get_state) -> Bool
@@ -72,6 +70,7 @@ function InputText(store::AbstractStore, get_state=Redux.get_state)
 end
 
 get_label(s::State) = s.label
+get_size(s::State) = s.size
 
 """
     get_string(s::State) -> String
