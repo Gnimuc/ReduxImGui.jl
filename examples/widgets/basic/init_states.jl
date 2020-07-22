@@ -62,6 +62,24 @@ APP_BASIC_INPUTTEXTWITHHINT_STATE = Dict(
 APP_BASIC_INPUTINT_STATE = Dict(
     "basic_input_int" => RigInputInt.State(
         "input int",
+        123,
+    ),
+)
+
+APP_BASIC_INPUTFLOAT_STATE = Dict(
+    "basic_input_float" => RigInputFloat.State(
+        "input float",
+        0.001f0,
+        step = 0.01f0,
+        speed = 1.0f0,
+        format = "%.3f",
+    ),
+    "basic_input_scientific" => RigInputFloat.State(
+        "input scientific",
+        Cfloat(1.e10),
+        step = 0.0f0,
+        speed = 0.0f0,
+        format = "%e",
     ),
 )
 
@@ -75,4 +93,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_INPUTTEXT_STATE,
     APP_BASIC_INPUTTEXTWITHHINT_STATE,
     APP_BASIC_INPUTINT_STATE,
+    APP_BASIC_INPUTFLOAT_STATE,
 )

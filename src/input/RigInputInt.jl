@@ -56,12 +56,15 @@ struct State <: AbstractImmutableState
 end
 State(
     label::AbstractString;
-    vals = Cint[0,0,0,0],
+    vals::Vector{Cint} = Cint[0, 0, 0, 0],
     size = 1,
     step = 1,
     speed = 100,
     flags = CImGui.ImGuiInputTextFlags_None,
 ) = State(label, vals, size, step, speed, flags)
+
+State(label::AbstractString, val::Integer; args...) =
+    State(label; vals = Cint[val, 0, 0, 0], args...)
 
 # reducers
 input_int(state::AbstractState, action::AbstractAction) = state
@@ -103,11 +106,6 @@ function InputInt(store::AbstractStore, get_state = Redux.get_state)
 end
 
 get_label(s::State) = s.label
-
-"""
-    get_values(s::State) -> String
-Return the current values.
-"""
 get_values(s::State) = s.vals
 
 end # module
