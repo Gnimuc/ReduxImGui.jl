@@ -83,6 +83,16 @@ APP_BASIC_INPUTFLOAT_STATE = Dict(
     ),
 )
 
+APP_BASIC_INPUTDOUBLE_STATE = Dict(
+    "basic_input_double" => RigInputDouble.State(
+        "input double",
+        999999.00000001,
+        step = 0.01f0,
+        speed = 1.0f0,
+        format = "%.8f",
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -94,4 +104,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_INPUTTEXTWITHHINT_STATE,
     APP_BASIC_INPUTINT_STATE,
     APP_BASIC_INPUTFLOAT_STATE,
+    APP_BASIC_INPUTDOUBLE_STATE
 )

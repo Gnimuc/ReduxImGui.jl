@@ -12,6 +12,6 @@ function get_values end
 
 """
     get_value(s)
-Return `first(get_values(s))`.
+Return the current value.
 """
-get_value(s) = first(get_values(s))
+function get_value end

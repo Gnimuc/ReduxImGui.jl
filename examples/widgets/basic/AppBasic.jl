@@ -18,6 +18,7 @@ struct State <: AbstractImmutableState
     input_text_with_hints::Dict{String,RigInputTextWithHint.State}
     input_ints::Dict{String,RigInputInt.State}
     input_floats::Dict{String,RigInputFloat.State}
+    input_doubles::Dict{String,RigInputDouble.State}
 end
 
 # reducers
@@ -32,6 +33,7 @@ function app_basic(state::AbstractState, action::AbstractAction)
     next_input_text_with_hint_state = RigInputTextWithHint.input_text_with_hint(state.input_text_with_hints, action)
     next_input_int_state = RigInputInt.input_int(state.input_ints, action)
     next_input_float_state = RigInputFloat.input_float(state.input_floats, action)
+    next_input_double_state = RigInputDouble.input_double(state.input_doubles, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
@@ -41,7 +43,8 @@ function app_basic(state::AbstractState, action::AbstractAction)
                  next_input_text_state,
                  next_input_text_with_hint_state,
                  next_input_int_state,
-                 next_input_float_state)
+                 next_input_float_state,
+                 next_input_double_state)
 end
 
 end # module

@@ -56,7 +56,7 @@ function ui(store::AbstractStore)
         naive_input_text(store)
         naive_input_text_with_hint(store)
         naive_input_int(store)
-        naive_input_float(store)
+        float_and_double_inputs(store)
 
         CImGui.TreePop()
     end

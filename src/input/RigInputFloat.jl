@@ -90,11 +90,11 @@ function input_float(state::Dict{String,State}, action::AbstractInputFloatAction
     return s
 end
 
-input_float(s::State, a::Rename) = State(a.new_label, s.vals, s.size, s.step, s.speed, s.flags)
-input_float(s::State, a::ChangeSize) = State(s.label, s.vals, a.size, s.step, s.speed, s.flags)
-input_float(s::State, a::ChangeStep) = State(s.label, s.vals, s.size, a.step, s.speed, s.flags)
-input_float(s::State, a::ChangeSpeed) = State(s.label, s.vals, s.size, s.step, a.speed, s.flags)
-input_float(s::State, a::ChangeFormat) = State(s.label, s.vals, s.size, s.step, s.speed, s.format)
+input_float(s::State, a::Rename) = State(a.new_label, s.vals, s.size, s.step, s.speed, s.format, s.flags)
+input_float(s::State, a::ChangeSize) = State(s.label, s.vals, a.size, s.step, s.speed, s.format, s.flags)
+input_float(s::State, a::ChangeStep) = State(s.label, s.vals, s.size, a.step, s.speed, s.format, s.flags)
+input_float(s::State, a::ChangeSpeed) = State(s.label, s.vals, s.size, s.step, a.speed, s.format, s.flags)
+input_float(s::State, a::ChangeFormat) = State(s.label, s.vals, s.size, s.step, s.speed, a.format, s.flags)
 
 # helper
 """
@@ -119,5 +119,6 @@ end
 
 get_label(s::State) = s.label
 get_values(s::State) = s.vals
+get_value(s) = first(s.vals)
 
 end # module

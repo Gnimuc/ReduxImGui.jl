@@ -55,4 +55,10 @@ using .RigInputFloat
 import .RigInputFloat: InputFloat
 export RigInputFloat
 
+include("input/RigInputDouble.jl")
+using .RigInputDouble
+import .RigInputDouble: InputDouble
+export RigInputDouble
+
+
 end # module

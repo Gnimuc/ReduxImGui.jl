@@ -27,13 +27,17 @@ function naive_input_int(store::AbstractStore)
     ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n")
 end
 
-function naive_input_float(store::AbstractStore)
+function float_and_double_inputs(store::AbstractStore)
     if ReduxImGui.InputFloat(store, s->get_state(s).input_floats["basic_input_float"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).input_floats["basic_input_float"])
         @info "Current value: $v"
     end
-    # CImGui.InputDouble("input double", &d0, 0.01, 1.0, "%.8f")
+    if ReduxImGui.InputDouble(store, s->get_state(s).input_doubles["basic_input_double"])
+        @info "This triggers $(@__FILE__):$(@__LINE__)."
+        v = ReduxImGui.get_value(get_state(store).input_doubles["basic_input_double"])
+        @info "Current value: $v"
+    end
     if ReduxImGui.InputFloat(store, s->get_state(s).input_floats["basic_input_scientific"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).input_floats["basic_input_scientific"])
