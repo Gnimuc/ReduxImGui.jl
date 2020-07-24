@@ -108,6 +108,21 @@ APP_BASIC_DRAGINT_STATE = Dict(
     ),
 )
 
+APP_BASIC_DRAGFLOAT_STATE = Dict(
+    "basic_drag_float" => RigDragFloat.State(
+        "drag float",
+        1.0f0,
+        speed = 0.005,
+    ),
+    "basic_drag_small_float" => RigDragFloat.State(
+        "drag small float",
+        0.0067f0,
+        speed = 0.0001,
+        range = (0.0f0,0.0f0),
+        format = "%.06f ns",
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -121,4 +136,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_INPUTFLOAT_STATE,
     APP_BASIC_INPUTDOUBLE_STATE,
     APP_BASIC_DRAGINT_STATE,
+    APP_BASIC_DRAGFLOAT_STATE,
 )

@@ -65,4 +65,10 @@ using .RigDragInt
 import .RigDragInt: DragInt
 export RigDragInt
 
+include("drag/RigDragFloat.jl")
+using .RigDragFloat
+import .RigDragFloat: DragFloat
+export RigDragFloat
+
+
 end # module
