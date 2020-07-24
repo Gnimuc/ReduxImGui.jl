@@ -60,5 +60,9 @@ using .RigInputDouble
 import .RigInputDouble: InputDouble
 export RigInputDouble
 
+include("drag/RigDragInt.jl")
+using .RigDragInt
+import .RigDragInt: DragInt
+export RigDragInt
 
 end # module

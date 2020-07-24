@@ -2,7 +2,7 @@ module RigInputInt
 
 using Redux
 using CImGui
-import ..ReduxImGui: get_label
+import ..ReduxImGui: get_label, get_values, get_value
 
 # actions
 abstract type AbstractInputIntAction <: AbstractSyncAction end
@@ -107,6 +107,6 @@ end
 
 get_label(s::State) = s.label
 get_values(s::State) = s.vals
-get_value(s) = first(s.vals)
+get_value(s::State) = first(s.vals)
 
 end # module

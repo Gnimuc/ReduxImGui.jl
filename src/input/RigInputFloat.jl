@@ -119,6 +119,6 @@ end
 
 get_label(s::State) = s.label
 get_values(s::State) = s.vals
-get_value(s) = first(s.vals)
+get_value(s::State) = first(s.vals)
 
 end # module

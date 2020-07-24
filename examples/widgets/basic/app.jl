@@ -15,6 +15,7 @@ include("ui/checkbox.jl")
 include("ui/combo.jl")
 include("ui/repeater.jl")
 include("ui/inputs.jl")
+include("ui/drags.jl")
 
 ## init states and create store
 include("init_states.jl")
@@ -57,6 +58,8 @@ function ui(store::AbstractStore)
         naive_input_text_with_hint(store)
         naive_input_int(store)
         float_and_double_inputs(store)
+
+        naive_drag_int(store)
 
         CImGui.TreePop()
     end

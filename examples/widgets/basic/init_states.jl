@@ -93,6 +93,21 @@ APP_BASIC_INPUTDOUBLE_STATE = Dict(
     ),
 )
 
+APP_BASIC_DRAGINT_STATE = Dict(
+    "basic_drag_int" => RigDragInt.State(
+        "drag int",
+        50,
+        speed = 1,
+    ),
+    "basic_drag_int2" => RigDragInt.State(
+        "drag int 0..100",
+        42,
+        speed = 1,
+        range = (0,100),
+        format = "%d%%",
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -104,5 +119,6 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_INPUTTEXTWITHHINT_STATE,
     APP_BASIC_INPUTINT_STATE,
     APP_BASIC_INPUTFLOAT_STATE,
-    APP_BASIC_INPUTDOUBLE_STATE
+    APP_BASIC_INPUTDOUBLE_STATE,
+    APP_BASIC_DRAGINT_STATE,
 )
