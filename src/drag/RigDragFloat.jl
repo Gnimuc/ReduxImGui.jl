@@ -115,8 +115,8 @@ drag_float(s::State, a::Rename) = State(a.new_label, s.vals, s.size, s.speed, s.
 drag_float(s::State, a::ChangeSize) = State(s.label, s.vals, a.size, s.speed, s.range, s.format, s.power)
 drag_float(s::State, a::ChangeSpeed) = State(s.label, s.vals, s.size, a.speed, s.range, s.format, s.power)
 drag_float(s::State, a::ChangeRange) = State(s.label, s.vals, s.size, s.speed, a.range, s.format, s.power)
-drag_float(s::State, a::ChangeRangeMaxTo) = State(s.label, s.vals, s.size, s.speed, (a.max, s.range[2]), s.format, s.power)
-drag_float(s::State, a::ChangeRangeMinTo) = State(s.label, s.vals, s.size, s.speed, (s.range[1], a.min), s.format, s.power)
+drag_float(s::State, a::ChangeRangeMaxTo) = State(s.label, s.vals, s.size, s.speed, (s.range[1], a.max), s.format, s.power)
+drag_float(s::State, a::ChangeRangeMinTo) = State(s.label, s.vals, s.size, s.speed, (a.min, s.range[2]), s.format, s.power)
 drag_float(s::State, a::ChangeFormat) = State(s.label, s.vals, s.size, s.speed, s.range, a.format, s.power)
 drag_float(s::State, a::ChangePower) = State(s.label, s.vals, s.size, s.speed, s.range, s.format, a.power)
 

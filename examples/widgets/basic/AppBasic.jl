@@ -21,6 +21,8 @@ struct State <: AbstractImmutableState
     input_doubles::Dict{String,RigInputDouble.State}
     drag_ints::Dict{String,RigDragInt.State}
     drag_floats::Dict{String,RigDragFloat.State}
+    slider_ints::Dict{String,RigSliderInt.State}
+    slider_floats::Dict{String,RigSliderFloat.State}
 end
 
 # reducers
@@ -38,6 +40,8 @@ function app_basic(state::AbstractState, action::AbstractAction)
     next_input_double_state = RigInputDouble.input_double(state.input_doubles, action)
     next_drag_int_state = RigDragInt.drag_int(state.drag_ints, action)
     next_drag_float_state = RigDragFloat.drag_float(state.drag_floats, action)
+    next_slider_int_state = RigSliderInt.slider_int(state.slider_ints, action)
+    next_slider_float_state = RigSliderFloat.slider_float(state.slider_floats, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
@@ -50,7 +54,9 @@ function app_basic(state::AbstractState, action::AbstractAction)
                  next_input_float_state,
                  next_input_double_state,
                  next_drag_int_state,
-                 next_drag_float_state)
+                 next_drag_float_state,
+                 next_slider_int_state,
+                 next_slider_float_state)
 end
 
 end # module

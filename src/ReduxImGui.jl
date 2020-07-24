@@ -70,5 +70,18 @@ using .RigDragFloat
 import .RigDragFloat: DragFloat
 export RigDragFloat
 
+include("slider/RigSliderInt.jl")
+using .RigSliderInt
+import .RigSliderInt: SliderInt
+export RigSliderInt
+
+include("slider/RigSliderFloat.jl")
+using .RigSliderFloat
+import .RigSliderFloat: SliderFloat
+export RigSliderFloat
+
+
+
+
 
 end # module

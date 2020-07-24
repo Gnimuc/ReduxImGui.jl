@@ -16,6 +16,7 @@ include("ui/combo.jl")
 include("ui/repeater.jl")
 include("ui/inputs.jl")
 include("ui/drags.jl")
+include("ui/sliders.jl")
 
 ## init states and create store
 include("init_states.jl")
@@ -61,6 +62,8 @@ function ui(store::AbstractStore)
 
         naive_drag_int(store)
         naive_drag_float(store)
+
+        naive_sliders(store)
 
         CImGui.TreePop()
     end

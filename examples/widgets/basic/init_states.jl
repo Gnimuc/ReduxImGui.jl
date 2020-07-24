@@ -123,6 +123,30 @@ APP_BASIC_DRAGFLOAT_STATE = Dict(
     ),
 )
 
+APP_BASIC_SLIDERINT_STATE = Dict(
+    "basic_slider_int" => RigSliderInt.State(
+        "slider int",
+        0,
+        range = (-1,3),
+    ),
+)
+
+APP_BASIC_SLIDERFLOAT_STATE = Dict(
+    "basic_slider_float" => RigSliderFloat.State(
+        "slider float",
+        0.123f0,
+        range = (0.0f0,1.0f0),
+        format = "ratio = %.3f",
+    ),
+    "basic_slider_float_curve" => RigSliderFloat.State(
+        "slider float (curve)",
+        0.0f0,
+        range = (-10.0f0,10.0f0),
+        format = "%.4f",
+        power = 2.0,
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -137,4 +161,6 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_INPUTDOUBLE_STATE,
     APP_BASIC_DRAGINT_STATE,
     APP_BASIC_DRAGFLOAT_STATE,
+    APP_BASIC_SLIDERINT_STATE,
+    APP_BASIC_SLIDERFLOAT_STATE,
 )
