@@ -80,7 +80,7 @@ State(
     label::AbstractString;
     vals::Vector{Cfloat} = Cfloat[0, 0, 0, 0],
     size = 1,
-    range = (Cfloat(0),Cfloat(0)),
+    range = (0.0f0,0.0f0),
     format = "%.3f",
     power = 1.0f0,
 ) = State(label, vals, size, range, format, power)

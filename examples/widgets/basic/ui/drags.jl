@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_drag_int(store::AbstractStore)
+function naive_drags(store::AbstractStore)
     if ReduxImGui.DragInt(store, s->get_state(s).drag_ints["basic_drag_int"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).drag_ints["basic_drag_int"])
@@ -16,9 +16,8 @@ function naive_drag_int(store::AbstractStore)
         v = ReduxImGui.get_value(get_state(store).drag_ints["basic_drag_int2"])
         @info "Current value: $v"
     end
-end
 
-function naive_drag_float(store::AbstractStore)
+
     if ReduxImGui.DragFloat(store, s->get_state(s).drag_floats["basic_drag_float"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).drag_floats["basic_drag_float"])

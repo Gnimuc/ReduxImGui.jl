@@ -55,14 +55,8 @@ function ui(store::AbstractStore)
 
         CImGui.LabelText("label", "Value")
         naive_combo(store)
-        naive_input_text(store)
-        naive_input_text_with_hint(store)
-        naive_input_int(store)
-        float_and_double_inputs(store)
-
-        naive_drag_int(store)
-        naive_drag_float(store)
-
+        naive_inputs(store)
+        naive_drags(store)
         naive_sliders(store)
 
         CImGui.TreePop()

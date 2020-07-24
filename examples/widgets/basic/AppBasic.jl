@@ -23,6 +23,7 @@ struct State <: AbstractImmutableState
     drag_floats::Dict{String,RigDragFloat.State}
     slider_ints::Dict{String,RigSliderInt.State}
     slider_floats::Dict{String,RigSliderFloat.State}
+    slider_angles::Dict{String,RigSliderAngle.State}
 end
 
 # reducers
@@ -42,6 +43,7 @@ function app_basic(state::AbstractState, action::AbstractAction)
     next_drag_float_state = RigDragFloat.drag_float(state.drag_floats, action)
     next_slider_int_state = RigSliderInt.slider_int(state.slider_ints, action)
     next_slider_float_state = RigSliderFloat.slider_float(state.slider_floats, action)
+    next_slider_angle_state = RigSliderAngle.slider_angle(state.slider_angles, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
@@ -56,7 +58,8 @@ function app_basic(state::AbstractState, action::AbstractAction)
                  next_drag_int_state,
                  next_drag_float_state,
                  next_slider_int_state,
-                 next_slider_float_state)
+                 next_slider_float_state,
+                 next_slider_angle_state)
 end
 
 end # module

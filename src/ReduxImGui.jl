@@ -80,7 +80,10 @@ using .RigSliderFloat
 import .RigSliderFloat: SliderFloat
 export RigSliderFloat
 
-
+include("slider/RigSliderAngle.jl")
+using .RigSliderAngle
+import .RigSliderAngle: SliderAngle
+export RigSliderAngle
 
 
 

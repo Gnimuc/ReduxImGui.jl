@@ -147,6 +147,13 @@ APP_BASIC_SLIDERFLOAT_STATE = Dict(
     ),
 )
 
+APP_BASIC_SLIDERANGLE_STATE = Dict(
+    "basic_slider_angle" => RigSliderAngle.State(
+        "slider angle",
+        0.0f0,
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -163,4 +170,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_DRAGFLOAT_STATE,
     APP_BASIC_SLIDERINT_STATE,
     APP_BASIC_SLIDERFLOAT_STATE,
+    APP_BASIC_SLIDERANGLE_STATE,
 )
