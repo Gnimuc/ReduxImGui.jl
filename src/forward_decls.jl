@@ -15,3 +15,10 @@ function get_values end
 Return the current value.
 """
 function get_value end
+
+
+"""
+    is_open(s) -> Bool
+Return `true` when the widget is open.
+"""
+function is_open end

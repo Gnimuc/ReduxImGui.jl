@@ -5,86 +5,90 @@ using CImGui
 
 include("forward_decls.jl")
 
-include("basic/RigButton.jl")
+include("buttons/RigButton.jl")
 using .RigButton
 import .RigButton: Button, is_on, get_size
 export RigButton
 
-include("basic/RigColorButton.jl")
+include("buttons/RigColorButton.jl")
 using .RigColorButton
 import .RigColorButton: ColorButton, get_color, get_hovered_color, get_active_color
 export RigColorButton
 
-include("basic/RigCheckbox.jl")
-using .RigCheckbox
-import .RigCheckbox: Checkbox, is_check
-export RigCheckbox
-
-include("basic/RigRadioButton.jl")
+include("buttons/RigRadioButton.jl")
 using .RigRadioButton
 import .RigRadioButton: RadioButton, is_active
 export RigRadioButton
 
-include("basic/RigArrowButton.jl")
+include("buttons/RigArrowButton.jl")
 using .RigArrowButton
 import .RigArrowButton: ArrowButton
 export RigArrowButton
 
-include("combo/RigCombo.jl")
+include("checkboxes/RigCheckbox.jl")
+using .RigCheckbox
+import .RigCheckbox: Checkbox, is_check
+export RigCheckbox
+
+include("combos/RigCombo.jl")
 using .RigCombo
 import .RigCombo: Combo
 export RigCombo
 
-include("input/RigInputText.jl")
+include("inputs/RigInputText.jl")
 using .RigInputText
 import .RigInputText: InputText, get_string
 export RigInputText
 
-include("input/RigInputTextWithHint.jl")
+include("inputs/RigInputTextWithHint.jl")
 using .RigInputTextWithHint
 import .RigInputTextWithHint: InputTextWithHint
 export RigInputTextWithHint
 
-include("input/RigInputInt.jl")
+include("inputs/RigInputInt.jl")
 using .RigInputInt
 import .RigInputInt: InputInt
 export RigInputInt
 
-include("input/RigInputFloat.jl")
+include("inputs/RigInputFloat.jl")
 using .RigInputFloat
 import .RigInputFloat: InputFloat
 export RigInputFloat
 
-include("input/RigInputDouble.jl")
+include("inputs/RigInputDouble.jl")
 using .RigInputDouble
 import .RigInputDouble: InputDouble
 export RigInputDouble
 
-include("drag/RigDragInt.jl")
+include("drags/RigDragInt.jl")
 using .RigDragInt
 import .RigDragInt: DragInt
 export RigDragInt
 
-include("drag/RigDragFloat.jl")
+include("drags/RigDragFloat.jl")
 using .RigDragFloat
 import .RigDragFloat: DragFloat
 export RigDragFloat
 
-include("slider/RigSliderInt.jl")
+include("sliders/RigSliderInt.jl")
 using .RigSliderInt
 import .RigSliderInt: SliderInt
 export RigSliderInt
 
-include("slider/RigSliderFloat.jl")
+include("sliders/RigSliderFloat.jl")
 using .RigSliderFloat
 import .RigSliderFloat: SliderFloat
 export RigSliderFloat
 
-include("slider/RigSliderAngle.jl")
+include("sliders/RigSliderAngle.jl")
 using .RigSliderAngle
 import .RigSliderAngle: SliderAngle
 export RigSliderAngle
 
+include("layout/RigTreeNode.jl")
+using .RigTreeNode
+import .RigTreeNode: TreeNode, TreeNodeEx
+export RigTreeNode
 
 
 end # module

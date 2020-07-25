@@ -27,7 +27,7 @@ function ui(store::AbstractStore)
     CImGui.SetNextWindowPos((650, 20), CImGui.ImGuiCond_FirstUseEver)
     CImGui.SetNextWindowSize((550, 680), CImGui.ImGuiCond_FirstUseEver)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)
-    if CImGui.TreeNode("Basic")
+    ReduxImGui.TreeNode("Basic") do
         naive_button(store)
         naive_checkbox(store)
         radio_button_group(store)
