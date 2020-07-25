@@ -168,6 +168,25 @@ APP_BASIC_COLOR_EDIT_STATES = Dict(
         ColorEdits.State("color 2", Cfloat[0.4, 0.7, 0.0, 0.5]),
 )
 
+APP_BASIC_LISTBOX_STATES = Dict(
+    "basic_listbox" => ListBoxes.State(
+        "listbox\n(single select)",
+        [
+            "Apple",
+            "Banana",
+            "Cherry",
+            "Kiwi",
+            "Mango",
+            "Orange",
+            "Pineapple",
+            "Strawberry",
+            "Watermelon",
+        ],
+        1,
+        4,
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATES,
     APP_BASIC_CHECKBOX_STATES,
@@ -187,4 +206,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_SLIDER_ANGLE_STATES,
     APP_BASIC_SLIDER_STRING_STATES,
     APP_BASIC_COLOR_EDIT_STATES,
+    APP_BASIC_LISTBOX_STATES,
 )

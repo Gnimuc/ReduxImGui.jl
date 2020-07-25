@@ -26,6 +26,7 @@ struct State <: AbstractImmutableState
     slider_angles::Dict{String,SliderAngles.State}
     slider_strings::Dict{String,SliderStrings.State}
     color_edits::Dict{String,ColorEdits.State}
+    listboxes::Dict{String,ListBoxes.State}
 end
 
 # reducers
@@ -48,6 +49,7 @@ function app_basic(state::AbstractState, action::AbstractAction)
     next_slider_angle_state = SliderAngles.slider_angle(state.slider_angles, action)
     next_slider_string_state = SliderStrings.slider_string(state.slider_strings, action)
     next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
+    next_listbox_state = ListBoxes.listbox(state.listboxes, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
@@ -65,7 +67,8 @@ function app_basic(state::AbstractState, action::AbstractAction)
                  next_slider_float_state,
                  next_slider_angle_state,
                  next_slider_string_state,
-                 next_color_edit_state)
+                 next_color_edit_state,
+                 next_listbox_state)
 end
 
 end # module

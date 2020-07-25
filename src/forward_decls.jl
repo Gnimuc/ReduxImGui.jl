@@ -23,7 +23,7 @@ Return the current string.
 function get_string end
 
 """
-    get_color(s) -> String
+    get_color(s)
 Return the current color.
 """
 function get_color end
