@@ -44,11 +44,9 @@ function ui(store::AbstractStore)
 
         CImGui.SameLine()
         CImGui.Text("- or me")
-        if CImGui.IsItemHovered()
-            ReduxImGui.Tooltip() do
-                CImGui.Text("I am a fancy tooltip")
-                CImGui.PlotLines("Curve", Cfloat[0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2], 7)
-            end
+        CImGui.IsItemHovered() && ReduxImGui.Tooltip() do
+            CImGui.Text("I am a fancy tooltip")
+            CImGui.PlotLines("Curve", Cfloat[0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2], 7)
         end
 
         CImGui.Separator()

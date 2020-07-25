@@ -2,7 +2,7 @@ module InputTexts
 
 using Redux
 using CImGui
-import ..ReduxImGui: get_label
+import ..ReduxImGui: get_label, get_string
 
 # actions
 abstract type AbstractInputTextAction <: AbstractSyncAction end
@@ -22,6 +22,7 @@ end
 Change buffer size to `size`.
 """
 struct ChangeSize <: AbstractInputTextAction
+    label::String
     size::Int
 end
 
@@ -71,11 +72,6 @@ end
 
 get_label(s::State) = s.label
 get_size(s::State) = s.size
-
-"""
-    get_string(s::State) -> String
-Return the current string.
-"""
 get_string(s::State) = split(s.buffer, '\0') |> first
 
 end # module

@@ -12,8 +12,8 @@ Set button's identifier to `new_id`.
 Please refer to `help?> CImGui.PushID` for further details.
 """
 struct SetIdTo <: AbstractArrowButtonAction
-    label::String
-    new_label::String
+    id::String
+    new_id::String
 end
 
 """

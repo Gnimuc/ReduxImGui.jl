@@ -22,6 +22,7 @@ end
 Change widget range to `range`.
 """
 struct ChangeRange <: AbstractSliderAngleAction
+    label::String
     range::Tuple{Cfloat,Cfloat}
 end
 
@@ -30,6 +31,7 @@ end
 Change widget max range to `max`.
 """
 struct ChangeRangeMaxTo <: AbstractSliderAngleAction
+    label::String
     max::Cfloat
 end
 
@@ -38,6 +40,7 @@ end
 Change widget min range to `min`.
 """
 struct ChangeRangeMinTo <: AbstractSliderAngleAction
+    label::String
     min::Cfloat
 end
 
@@ -46,6 +49,7 @@ end
 Change value's format to `format`, e.g. "%d".
 """
 struct ChangeFormat <: AbstractSliderAngleAction
+    label::String
     format::String
 end
 

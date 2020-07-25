@@ -14,6 +14,7 @@ abstract type AbstractInputTextWithHintAction <: AbstractInputTextAction end
 Set hint to `hint`.
 """
 struct SetHint <: AbstractInputTextAction
+    label::String
     hint::String
 end
 

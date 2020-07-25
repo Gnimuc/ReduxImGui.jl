@@ -37,7 +37,7 @@ export Combos
 
 include("inputs/InputTexts.jl")
 using .InputTexts
-import .InputTexts: InputText, get_string
+import .InputTexts: InputText
 export InputTexts
 
 include("inputs/InputTextWithHints.jl")
@@ -84,6 +84,11 @@ include("sliders/SliderAngles.jl")
 using .SliderAngles
 import .SliderAngles: SliderAngle
 export SliderAngles
+
+include("sliders/SliderStrings.jl")
+using .SliderStrings
+import .SliderStrings: SliderString
+export SliderStrings
 
 include("trees/TreeNodes.jl")
 using .TreeNodes

@@ -154,6 +154,13 @@ APP_BASIC_SLIDERANGLE_STATE = Dict(
     ),
 )
 
+APP_BASIC_SLIDERSTRING_STATE = Dict(
+    "basic_slider_string" => SliderStrings.State(
+        "slider enum",
+        ["Fire", "Earth", "Air", "Water"],
+    ),
+)
+
 APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_BUTTON_STATE,
     APP_BASIC_CHECKBOX_STATE,
@@ -171,4 +178,5 @@ APP_BASIC_STATE = AppBasic.State(
     APP_BASIC_SLIDERINT_STATE,
     APP_BASIC_SLIDERFLOAT_STATE,
     APP_BASIC_SLIDERANGLE_STATE,
+    APP_BASIC_SLIDERSTRING_STATE,
 )

@@ -16,6 +16,11 @@ Return the current value.
 """
 function get_value end
 
+"""
+    get_string(s) -> String
+Return the current string.
+"""
+function get_string end
 
 """
     is_open(s) -> Bool

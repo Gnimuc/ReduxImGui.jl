@@ -21,9 +21,10 @@ end
     ChangeSize(label, size)
 Change widget size to `size`.
 Note changing size also changes widget appearance. If the old size is bigger,
-the old states are left intact.
+those unused states are left intact.
 """
 struct ChangeSize <: AbstractSliderFloatAction
+    label::String
     size::Int
 end
 
@@ -32,6 +33,7 @@ end
 Change widget range to `range`.
 """
 struct ChangeRange <: AbstractSliderFloatAction
+    label::String
     range::Tuple{Cfloat,Cfloat}
 end
 
@@ -40,6 +42,7 @@ end
 Change widget max range to `max`.
 """
 struct ChangeRangeMaxTo <: AbstractSliderFloatAction
+    label::String
     max::Cfloat
 end
 
@@ -48,6 +51,7 @@ end
 Change widget min range to `min`.
 """
 struct ChangeRangeMinTo <: AbstractSliderFloatAction
+    label::String
     min::Cfloat
 end
 
@@ -56,6 +60,7 @@ end
 Change value's format to `format`, e.g. "%d".
 """
 struct ChangeFormat <: AbstractSliderFloatAction
+    label::String
     format::String
 end
 
@@ -64,6 +69,7 @@ end
 Change power to `pow`, e.g. "%d".
 """
 struct ChangePower <: AbstractSliderFloatAction
+    label::String
     power::Cfloat
 end
 

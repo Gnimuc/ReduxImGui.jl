@@ -22,6 +22,7 @@ end
 Change value's moving step to `step`.
 """
 struct ChangeStep <: AbstractInputDoubleAction
+    label::String
     step::Cdouble
 end
 
@@ -30,6 +31,7 @@ end
 Change value's moving speed to `speed`.
 """
 struct ChangeSpeed <: AbstractInputDoubleAction
+    label::String
     speed::Cdouble
 end
 
@@ -38,6 +40,7 @@ end
 Change value's format to `format`, e.g. "%.6f".
 """
 struct ChangeFormat <: AbstractInputDoubleAction
+    label::String
     format::String
 end
 

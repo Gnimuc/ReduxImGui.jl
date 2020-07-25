@@ -21,9 +21,10 @@ end
     ChangeSize(label, size)
 Change widget size to `size`.
 Note changing size also changes widget appearance. If the old size is bigger,
-the old states are left intact.
+those unused states are left intact.
 """
 struct ChangeSize <: AbstractDragIntAction
+    label::String
     size::Int
 end
 
@@ -32,6 +33,7 @@ end
 Change value's moving speed to `speed`.
 """
 struct ChangeSpeed <: AbstractDragIntAction
+    label::String
     speed::Cfloat
 end
 
@@ -40,6 +42,7 @@ end
 Change widget range to `range`.
 """
 struct ChangeRange <: AbstractDragIntAction
+    label::String
     range::Tuple{Cint,Cint}
 end
 
@@ -48,6 +51,7 @@ end
 Change widget max range to `max`.
 """
 struct ChangeRangeMaxTo <: AbstractDragIntAction
+    label::String
     max::Cint
 end
 
@@ -56,6 +60,7 @@ end
 Change widget min range to `min`.
 """
 struct ChangeRangeMinTo <: AbstractDragIntAction
+    label::String
     min::Cint
 end
 
@@ -64,6 +69,7 @@ end
 Change value's format to `format`, e.g. "%d".
 """
 struct ChangeFormat <: AbstractDragIntAction
+    label::String
     format::String
 end
 

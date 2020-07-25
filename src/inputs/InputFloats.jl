@@ -21,9 +21,10 @@ end
     ChangeSize(label, size)
 Change widget size to `size`.
 Note changing size also changes widget appearance. If the old size is bigger,
-the old states are left intact.
+those unused states are left intact.
 """
 struct ChangeSize <: AbstractInputFloatAction
+    label::String
     size::Int
 end
 
@@ -33,6 +34,7 @@ Change value's moving step to `step`.
 This only takes effect when the widget size is 1.
 """
 struct ChangeStep <: AbstractInputFloatAction
+    label::String
     step::Cfloat
 end
 
@@ -42,6 +44,7 @@ Change value's moving speed to `speed`.
 This only takes effect when the widget size is 1.
 """
 struct ChangeSpeed <: AbstractInputFloatAction
+    label::String
     speed::Cfloat
 end
 
@@ -50,6 +53,7 @@ end
 Change value's format to `format`, e.g. "%.3f".
 """
 struct ChangeFormat <: AbstractInputFloatAction
+    label::String
     format::String
 end
 
