@@ -23,6 +23,12 @@ Return the current string.
 function get_string end
 
 """
+    get_color(s) -> String
+Return the current color.
+"""
+function get_color end
+
+"""
     is_open(s) -> Bool
 Return `true` when the widget is open.
 """

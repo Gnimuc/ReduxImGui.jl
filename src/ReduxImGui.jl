@@ -5,6 +5,7 @@ using CImGui
 
 include("forward_decls.jl")
 
+## Buttons
 include("buttons/Buttons.jl")
 using .Buttons
 import .Buttons: Button, is_on, get_size
@@ -25,16 +26,19 @@ using .ArrowButtons
 import .ArrowButtons: ArrowButton
 export ArrowButtons
 
+## Checkboxes
 include("checkboxes/Checkboxes.jl")
 using .Checkboxes
 import .Checkboxes: Checkbox, is_check
 export Checkboxes
 
+## Combos
 include("combos/Combos.jl")
 using .Combos
 import .Combos: Combo
 export Combos
 
+## Inputs
 include("inputs/InputTexts.jl")
 using .InputTexts
 import .InputTexts: InputText
@@ -60,6 +64,7 @@ using .InputDoubles
 import .InputDoubles: InputDouble
 export InputDoubles
 
+## Drags
 include("drags/DragInts.jl")
 using .DragInts
 import .DragInts: DragInt
@@ -70,6 +75,7 @@ using .DragFloats
 import .DragFloats: DragFloat
 export DragFloats
 
+## Sliders
 include("sliders/SliderInts.jl")
 using .SliderInts
 import .SliderInts: SliderInt
@@ -90,6 +96,13 @@ using .SliderStrings
 import .SliderStrings: SliderString
 export SliderStrings
 
+## ColorEdits
+include("color_edits/ColorEdits.jl")
+using .ColorEdits
+import .ColorEdits: ColorEdit
+export ColorEdits
+
+## Others
 include("trees/TreeNodes.jl")
 using .TreeNodes
 import .TreeNodes: TreeNode, TreeNodeEx
