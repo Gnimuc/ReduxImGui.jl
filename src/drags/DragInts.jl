@@ -1,4 +1,4 @@
-module RigDragInt
+module DragInts
 
 using Redux
 using CImGui

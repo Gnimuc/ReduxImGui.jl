@@ -2,7 +2,7 @@ module RigRepeater
 
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
-using ReduxImGui.RigArrowButton
+using ReduxImGui.ArrowButtons
 
 # actions
 abstract type AbstractRepeaterAction <: AbstractSyncAction end
@@ -35,14 +35,14 @@ end
 struct State <: AbstractImmutableState
     id::String
     counter::Int
-    button1::RigArrowButton.State
-    button2::RigArrowButton.State
+    button1::ArrowButtons.State
+    button2::ArrowButtons.State
 end
 State(id::AbstractString, counter) = State(
     id,
     counter,
-    RigArrowButton.State("##left", CImGui.ImGuiDir_Left),
-    RigArrowButton.State("##right", CImGui.ImGuiDir_Right),
+    ArrowButtons.State("##left", CImGui.ImGuiDir_Left),
+    ArrowButtons.State("##right", CImGui.ImGuiDir_Right),
 )
 State(id::AbstractString) = State(id, 0)
 
@@ -64,8 +64,8 @@ repeater(s::State, a::Decrement) = State(s.id, s.counter - 1, s.button1, s.butto
 repeater(s::State, a::ChangeArrowToUpDown) = State(
     s.id,
     s.counter,
-    RigArrowButton.State("##up", CImGui.ImGuiDir_Up),
-    RigArrowButton.State("##down", CImGui.ImGuiDir_Down),
+    ArrowButtons.State("##up", CImGui.ImGuiDir_Up),
+    ArrowButtons.State("##down", CImGui.ImGuiDir_Down),
 )
 
 # helper
@@ -77,12 +77,12 @@ function Repeater(store::AbstractStore, get_state=s->Redux.get_state(s))
     is_pressed = false
     spacing = CImGui.GetStyle().ItemInnerSpacing.x
     CImGui.PushButtonRepeat(true)
-    if RigArrowButton.ArrowButton(store, s->get_state(s).button1)
+    if ArrowButtons.ArrowButton(store, s->get_state(s).button1)
         dispatch!(store, Decrement(get_state(store).id))
         is_pressed = true
     end
     CImGui.SameLine(0.0, spacing)
-    if RigArrowButton.ArrowButton(store, s->get_state(s).button2)
+    if ArrowButtons.ArrowButton(store, s->get_state(s).button2)
         dispatch!(store, Increment(get_state(store).id))
         is_pressed = true
     end

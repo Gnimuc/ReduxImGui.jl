@@ -1,9 +1,9 @@
-module RigInputTextWithHint
+module InputTextWithHints
 
 using Redux
 using CImGui
-using ..RigInputText
-import ..RigInputText: AbstractInputTextAction, get_string, get_size
+using ..InputTexts
+import ..InputTexts: AbstractInputTextAction, get_string, get_size
 import ..ReduxImGui: get_label
 
 # actions
@@ -19,11 +19,11 @@ end
 
 # state
 struct State <: AbstractImmutableState
-    input_text::RigInputText.State
+    input_text::InputTexts.State
     hint::String
 end
 State(label::AbstractString, hint::AbstractString; varargs...) =
-    State(RigInputText.State(label, varargs...), hint)
+    State(InputTexts.State(label, varargs...), hint)
 
 # reducers
 input_text_with_hint(state::AbstractState, action::AbstractAction) = state
@@ -33,7 +33,7 @@ input_text_with_hint(state::Dict{String,<:AbstractState}, action::AbstractAction
 function input_text_with_hint(state::Dict{String,State}, action::AbstractInputTextAction)
     s = Dict{String,State}()
     for (k,v) in state
-        s[k] = get_label(v) == action.label ? RigInputText.input_text(v, action) : v
+        s[k] = get_label(v) == action.label ? InputTexts.input_text(v, action) : v
     end
     return s
 end

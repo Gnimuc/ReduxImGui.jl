@@ -17,9 +17,9 @@ function color_buttons(store::AbstractStore)
     i = 0
     for (k,v) in get_state(store).color_buttons
         label = ReduxImGui.get_label(v)
-        dispatch!(store, RigColorButton.SetButtonColorTo(label, CImGui.HSV(i/7.0, 0.6, 0.6)))
-        dispatch!(store, RigColorButton.SetHoveredColorTo(label, CImGui.HSV(i/7.0, 0.7, 0.7)))
-        dispatch!(store, RigColorButton.SetActiveColorTo(label, CImGui.HSV(i/7.0, 0.8, 0.8)))
+        dispatch!(store, ColorButtons.SetButtonColorTo(label, CImGui.HSV(i/7.0, 0.6, 0.6)))
+        dispatch!(store, ColorButtons.SetHoveredColorTo(label, CImGui.HSV(i/7.0, 0.7, 0.7)))
+        dispatch!(store, ColorButtons.SetActiveColorTo(label, CImGui.HSV(i/7.0, 0.8, 0.8)))
         if ReduxImGui.ColorButton(store, s->get_state(s).color_buttons[k])
             @info "This triggers $(@__FILE__):$(@__LINE__)."
         end
@@ -33,21 +33,21 @@ function radio_button_group(store::AbstractStore)
     state = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button1"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button2"].label, false))
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button3"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button2"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button3"].label, false))
     end
     CImGui.SameLine()
     state = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button2"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button1"].label, false))
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button3"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button1"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button3"].label, false))
     end
     CImGui.SameLine()
     state = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button3"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button1"].label, false))
-        dispatch!(store, RigRadioButton.SetTo(state.radio_buttons["basic_radio_button2"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button1"].label, false))
+        dispatch!(store, RadioButtons.SetTo(state.radio_buttons["basic_radio_button2"].label, false))
     end
 end

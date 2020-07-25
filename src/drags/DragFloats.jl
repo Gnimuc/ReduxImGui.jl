@@ -1,4 +1,4 @@
-module RigDragFloat
+module DragFloats
 
 using Redux
 using CImGui

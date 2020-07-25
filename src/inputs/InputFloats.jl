@@ -1,4 +1,4 @@
-module RigInputFloat
+module InputFloats
 
 using Redux
 using CImGui

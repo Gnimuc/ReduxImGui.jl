@@ -1,4 +1,4 @@
-module RigInputInt
+module InputInts
 
 using Redux
 using CImGui

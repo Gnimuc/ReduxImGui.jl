@@ -1,4 +1,4 @@
-module RigCheckbox
+module Checkboxes
 
 using Redux
 using CImGui

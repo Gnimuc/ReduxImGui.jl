@@ -5,90 +5,94 @@ using CImGui
 
 include("forward_decls.jl")
 
-include("buttons/RigButton.jl")
-using .RigButton
-import .RigButton: Button, is_on, get_size
-export RigButton
+include("buttons/Buttons.jl")
+using .Buttons
+import .Buttons: Button, is_on, get_size
+export Buttons
 
-include("buttons/RigColorButton.jl")
-using .RigColorButton
-import .RigColorButton: ColorButton, get_color, get_hovered_color, get_active_color
-export RigColorButton
+include("buttons/ColorButtons.jl")
+using .ColorButtons
+import .ColorButtons: ColorButton, get_color, get_hovered_color, get_active_color
+export ColorButtons
 
-include("buttons/RigRadioButton.jl")
-using .RigRadioButton
-import .RigRadioButton: RadioButton, is_active
-export RigRadioButton
+include("buttons/RadioButtons.jl")
+using .RadioButtons
+import .RadioButtons: RadioButton, is_active
+export RadioButtons
 
-include("buttons/RigArrowButton.jl")
-using .RigArrowButton
-import .RigArrowButton: ArrowButton
-export RigArrowButton
+include("buttons/ArrowButtons.jl")
+using .ArrowButtons
+import .ArrowButtons: ArrowButton
+export ArrowButtons
 
-include("checkboxes/RigCheckbox.jl")
-using .RigCheckbox
-import .RigCheckbox: Checkbox, is_check
-export RigCheckbox
+include("checkboxes/Checkboxes.jl")
+using .Checkboxes
+import .Checkboxes: Checkbox, is_check
+export Checkboxes
 
-include("combos/RigCombo.jl")
-using .RigCombo
-import .RigCombo: Combo
-export RigCombo
+include("combos/Combos.jl")
+using .Combos
+import .Combos: Combo
+export Combos
 
-include("inputs/RigInputText.jl")
-using .RigInputText
-import .RigInputText: InputText, get_string
-export RigInputText
+include("inputs/InputTexts.jl")
+using .InputTexts
+import .InputTexts: InputText, get_string
+export InputTexts
 
-include("inputs/RigInputTextWithHint.jl")
-using .RigInputTextWithHint
-import .RigInputTextWithHint: InputTextWithHint
-export RigInputTextWithHint
+include("inputs/InputTextWithHints.jl")
+using .InputTextWithHints
+import .InputTextWithHints: InputTextWithHint
+export InputTextWithHints
 
-include("inputs/RigInputInt.jl")
-using .RigInputInt
-import .RigInputInt: InputInt
-export RigInputInt
+include("inputs/InputInts.jl")
+using .InputInts
+import .InputInts: InputInt
+export InputInts
 
-include("inputs/RigInputFloat.jl")
-using .RigInputFloat
-import .RigInputFloat: InputFloat
-export RigInputFloat
+include("inputs/InputFloats.jl")
+using .InputFloats
+import .InputFloats: InputFloat
+export InputFloats
 
-include("inputs/RigInputDouble.jl")
-using .RigInputDouble
-import .RigInputDouble: InputDouble
-export RigInputDouble
+include("inputs/InputDoubles.jl")
+using .InputDoubles
+import .InputDoubles: InputDouble
+export InputDoubles
 
-include("drags/RigDragInt.jl")
-using .RigDragInt
-import .RigDragInt: DragInt
-export RigDragInt
+include("drags/DragInts.jl")
+using .DragInts
+import .DragInts: DragInt
+export DragInts
 
-include("drags/RigDragFloat.jl")
-using .RigDragFloat
-import .RigDragFloat: DragFloat
-export RigDragFloat
+include("drags/DragFloats.jl")
+using .DragFloats
+import .DragFloats: DragFloat
+export DragFloats
 
-include("sliders/RigSliderInt.jl")
-using .RigSliderInt
-import .RigSliderInt: SliderInt
-export RigSliderInt
+include("sliders/SliderInts.jl")
+using .SliderInts
+import .SliderInts: SliderInt
+export SliderInts
 
-include("sliders/RigSliderFloat.jl")
-using .RigSliderFloat
-import .RigSliderFloat: SliderFloat
-export RigSliderFloat
+include("sliders/SliderFloats.jl")
+using .SliderFloats
+import .SliderFloats: SliderFloat
+export SliderFloats
 
-include("sliders/RigSliderAngle.jl")
-using .RigSliderAngle
-import .RigSliderAngle: SliderAngle
-export RigSliderAngle
+include("sliders/SliderAngles.jl")
+using .SliderAngles
+import .SliderAngles: SliderAngle
+export SliderAngles
 
-include("layout/RigTreeNode.jl")
-using .RigTreeNode
-import .RigTreeNode: TreeNode, TreeNodeEx
-export RigTreeNode
+include("trees/TreeNodes.jl")
+using .TreeNodes
+import .TreeNodes: TreeNode, TreeNodeEx
+export TreeNodes
 
+include("tooltips/Tooltips.jl")
+using .Tooltips
+import .Tooltips: Tooltip
+export Tooltips
 
 end # module

@@ -1,4 +1,4 @@
-module RigInputText
+module InputTexts
 
 using Redux
 using CImGui

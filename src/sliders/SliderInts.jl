@@ -1,4 +1,4 @@
-module RigSliderInt
+module SliderInts
 
 using Redux
 using CImGui

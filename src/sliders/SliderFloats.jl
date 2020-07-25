@@ -1,4 +1,4 @@
-module RigSliderFloat
+module SliderFloats
 
 using Redux
 using CImGui

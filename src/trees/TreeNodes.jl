@@ -1,4 +1,4 @@
-module RigTreeNode
+module TreeNodes
 
 using Redux
 using CImGui

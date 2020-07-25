@@ -1,4 +1,4 @@
-module RigInputDouble
+module InputDoubles
 
 using Redux
 using CImGui

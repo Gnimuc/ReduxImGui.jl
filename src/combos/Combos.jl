@@ -1,4 +1,4 @@
-module RigCombo
+module Combos
 
 using Redux
 using CImGui

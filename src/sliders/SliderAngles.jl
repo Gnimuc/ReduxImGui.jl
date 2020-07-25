@@ -1,4 +1,4 @@
-module RigSliderAngle
+module SliderAngles
 
 using Redux
 using CImGui
