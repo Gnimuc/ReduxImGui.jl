@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_inputs(store::AbstractStore)
+function naive_inputs(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.InputText(store, s->get_state(s).input_texts["basic_input_text"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         @info "Current string: "*ReduxImGui.get_string(get_state(store).input_texts["basic_input_text"])

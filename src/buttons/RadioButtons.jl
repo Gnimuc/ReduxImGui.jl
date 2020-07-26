@@ -17,10 +17,10 @@ struct Rename <: AbstractRadioButtonAction
 end
 
 """
-    SetTo(label, is_active)
+    SetActiveTo(label, is_active)
 Set radio button's state to `is_active`.
 """
-struct SetTo <: AbstractRadioButtonAction
+struct SetActiveTo <: AbstractRadioButtonAction
     label::String
     is_active::Bool
 end
@@ -46,7 +46,7 @@ function radio_button(state::Dict{String,State}, action::AbstractRadioButtonActi
 end
 
 radio_button(s::State, a::Rename) = State(a.new_label, s.size, s.is_active)
-radio_button(s::State, a::SetTo) = State(s.label, a.is_active)
+radio_button(s::State, a::SetActiveTo) = State(s.label, a.is_active)
 
 # helper
 """

@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_combo(store::AbstractStore)
+function naive_combo(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.Combo(store, s->get_state(s).combos["basic_combo"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
     end

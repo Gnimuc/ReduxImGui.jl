@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_sliders(store::AbstractStore)
+function naive_sliders(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.SliderInt(store, s->get_state(s).slider_ints["basic_slider_int"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).slider_ints["basic_slider_int"])

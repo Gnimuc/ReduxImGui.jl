@@ -1,4 +1,4 @@
-module RigRepeater
+module Repeaters
 
 using ReduxImGui.Redux
 using ReduxImGui.CImGui

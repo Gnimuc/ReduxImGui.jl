@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_drags(store::AbstractStore)
+function naive_drags(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.DragInt(store, s->get_state(s).drag_ints["basic_drag_int"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         v = ReduxImGui.get_value(get_state(store).drag_ints["basic_drag_int"])

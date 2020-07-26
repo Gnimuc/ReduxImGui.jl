@@ -2,7 +2,7 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 
-function naive_color_edits(store::AbstractStore)
+function naive_color_edits(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.ColorEdit(store, s->get_state(s).color_edits["basic_color_edit_no_alpha"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
     end
