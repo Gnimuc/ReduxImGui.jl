@@ -116,10 +116,10 @@ end
 Return `true` when opened.
 """
 function Combo(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
+    s = get_state(store)
     is_opened = false
     current_item = state.current_item
-    if CImGui.BeginCombo(get_label(state), current_item, state.flags)
+    if CImGui.BeginCombo(get_label(s), current_item, state.flags)
         for item in state.items
             is_selected = item == current_item
             CImGui.Selectable(item, is_selected) && (current_item = item;)
@@ -128,7 +128,7 @@ function Combo(store::AbstractStore, get_state=Redux.get_state)
         is_opened = true
         CImGui.EndCombo()
     end
-    is_opened && dispatch!(store, SetCurrentItemTo(get_label(state), current_item))
+    is_opened && dispatch!(store, SetCurrentItemTo(get_label(s), current_item))
     return is_opened
 end
 

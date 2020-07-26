@@ -89,13 +89,13 @@ color_button(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.
 A wrapper over [`Buttons.Button`](@ref) with additional color states.
 """
 function ColorButton(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
+    s = get_state(store)
     CImGui.PushStyleColor(CImGui.ImGuiCol_Button, get_color(state))
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonHovered, get_hovered_color(state))
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(state))
-    is_clicked = CImGui.Button(get_label(state), get_size(state))
+    is_clicked = CImGui.Button(get_label(s), get_size(state))
     CImGui.PopStyleColor(3)
-    is_clicked && dispatch!(store, Buttons.Toggle(get_label(state)))
+    is_clicked && dispatch!(store, Buttons.Toggle(get_label(s)))
     return is_clicked
 end
 

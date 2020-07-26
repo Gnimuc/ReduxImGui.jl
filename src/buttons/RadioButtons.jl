@@ -55,7 +55,7 @@ Return `true` when pressed and sets itself to be active.
 See also [`is_active`](@ref).
 """
 function RadioButton(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
+    s = get_state(store)
     is_clicked = CImGui.RadioButton(state.label, state.is_active)
     is_clicked && dispatch!(store, SetActiveTo(state.label, true))
     return is_clicked

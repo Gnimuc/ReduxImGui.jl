@@ -60,7 +60,7 @@ arrow_button(s::State, a::SetArrowTo) = State(s.id, a.direction)
 Return `true` when pressed.
 """
 function ArrowButton(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
+    s = get_state(store)
     is_clicked = CImGui.ArrowButton(state.id, state.direction)
     return is_clicked
 end

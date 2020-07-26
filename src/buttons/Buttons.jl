@@ -89,9 +89,9 @@ Return `true` when pressed. It also maintains a `is_clicked` state which can be
 used to implement an on/off button, see also [`is_on`](@ref).
 """
 function Button(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
-    is_clicked = CImGui.Button(get_label(state), get_size(state))
-    is_clicked && dispatch!(store, Toggle(get_label(state)))
+    s = get_state(store)
+    is_clicked = CImGui.Button(get_label(s), get_size(s))
+    is_clicked && dispatch!(store, Toggle(get_label(s)))
     return is_clicked
 end
 

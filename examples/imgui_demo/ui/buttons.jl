@@ -30,7 +30,7 @@ function color_buttons(store::AbstractStore, get_state=Redux.get_state)
 end
 
 function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
-    state = get_state(store)
+    s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button1"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         b2 = state.radio_buttons["basic_radio_button2"]
@@ -40,7 +40,7 @@ function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
     end
     CImGui.SameLine()
 
-    state = get_state(store)
+    s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button2"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         b1 = state.radio_buttons["basic_radio_button1"]
@@ -50,7 +50,7 @@ function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
     end
     CImGui.SameLine()
 
-    state = get_state(store)
+    s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button3"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
         b1 = state.radio_buttons["basic_radio_button1"]
