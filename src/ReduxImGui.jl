@@ -109,25 +109,25 @@ import .ListBoxes: ListBox, get_items, get_item
 export ListBoxes
 
 ## Menus
-include("menus/MainMenuBars.jl")
-using .MainMenuBars
-import .MainMenuBars: MainMenuBar
-export MainMenuBars
-
-include("menus/MenuBars.jl")
-using .MenuBars
-import .MenuBars: MenuBar
-export MenuBars
+include("menus/MenuItems.jl")
+using .MenuItems
+import .MenuItems: MenuItem
+export MenuItems
 
 include("menus/Menus.jl")
 using .Menus
 import .Menus: Menu
 export Menus
 
-include("menus/MenuItems.jl")
-using .MenuItems
-import .MenuItems: MenuItem
-export MenuItems
+include("menus/MenuBars.jl")
+using .MenuBars
+import .MenuBars: MenuBar
+export MenuBars
+
+include("menus/MainMenuBars.jl")
+using .MainMenuBars
+import .MainMenuBars: MainMenuBar
+export MainMenuBars
 
 ## Others
 include("trees/TreeNodes.jl")

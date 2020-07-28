@@ -63,13 +63,11 @@ color_button(state::AbstractState, action::AbstractAction) = state
 color_button(state::Vector{<:AbstractState}, action::AbstractAction) = state
 color_button(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
-function color_button(state::Dict{String,State}, action::AbstractButtonAction)
-    s = Dict{String,State}()
-    for (k, v) in state
-        s[k] = get_label(v) == action.label ? Buttons.button(v, action) : v
-    end
-    return s
-end
+color_button(s::State, a::SetButtonColorTo) = State(s.button, a.color, s.hovered_color, s.active_color)
+color_button(s::State, a::SetHoveredColorTo) = State(s.button, s.button_color, a.color, s.active_color)
+color_button(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.hovered_color, a.color)
+color_button(s::State, a::AbstractButtonAction) =
+    State(Buttons.button(s.button, a), s.color, s.hovered_color, s.active_color)
 
 function color_button(state::Dict{String,State}, action::AbstractColorButtonAction)
     s = Dict{String,State}()
@@ -79,10 +77,6 @@ function color_button(state::Dict{String,State}, action::AbstractColorButtonActi
     return s
 end
 
-color_button(s::State, a::SetButtonColorTo) = State(s.button, a.color, s.hovered_color, s.active_color)
-color_button(s::State, a::SetHoveredColorTo) = State(s.button, s.button_color, a.color, s.active_color)
-color_button(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.hovered_color, a.color)
-
 # helper
 """
     ColorButton(store::AbstractStore, get_state=Redux.get_state) -> Bool
@@ -90,10 +84,10 @@ A wrapper over [`Buttons.Button`](@ref) with additional color states.
 """
 function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
-    CImGui.PushStyleColor(CImGui.ImGuiCol_Button, get_color(state))
-    CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonHovered, get_hovered_color(state))
-    CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(state))
-    is_clicked = CImGui.Button(get_label(s), get_size(state))
+    CImGui.PushStyleColor(CImGui.ImGuiCol_Button, get_color(s))
+    CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonHovered, get_hovered_color(s))
+    CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(s))
+    is_clicked = CImGui.Button(get_label(s), get_size(s))
     CImGui.PopStyleColor(3)
     is_clicked && dispatch!(store, Buttons.Toggle(get_label(s)))
     return is_clicked

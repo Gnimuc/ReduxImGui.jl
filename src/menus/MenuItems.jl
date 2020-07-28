@@ -59,6 +59,27 @@ struct Disable <: AbstractMenuItemAction
     label::String
 end
 
+"""
+    AddMenuItem(label::AbstractString, shortcut = "", is_selected = false, is_enabled = true)
+Add a menu item.
+"""
+struct AddMenuItem <: AbstractMenuItemAction
+    label::String
+    shortcut::String
+    is_selected::Bool
+    is_enabled::Bool
+end
+AddMenuItem(label::AbstractString, shortcut = "", is_selected = false) =
+    AddMenuItem(label, shortcut, is_selected, true)
+
+"""
+    DeleteMenuItem(label::AbstractString)
+Delete the menu item.
+"""
+struct DeleteMenuItem <: AbstractMenuItemAction
+    label::String
+end
+
 # state
 struct State <: AbstractImmutableState
     label::String
@@ -74,6 +95,20 @@ menu_item(state::AbstractState, action::AbstractAction) = state
 menu_item(state::Vector{<:AbstractState}, action::AbstractAction) = state
 menu_item(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
+menu_item(s::State, a::Rename) = State(a.new_label, s.shortcut, s.is_selected, s.is_enabled)
+menu_item(s::State, a::ChangeShortcut) = State(s.label, a.shortcut, s.is_selected, s.is_enabled)
+menu_item(s::State, a::SetSelectedTo) = State(s.label, s.shortcut, a.is_selected, s.is_enabled)
+menu_item(s::State, a::Toggle) = State(s.label, s.shortcut, !s.is_selected, s.is_enabled)
+menu_item(s::State, a::Enable) = State(s.label, s.shortcut, s.is_selected, true)
+menu_item(s::State, a::Disable) = State(s.label, s.shortcut, s.is_selected, false)
+
+menu_item(s::Vector{State}, a::AbstractMenuItemAction) = map(s) do s
+    s.label === a.label ? menu_item(s, a) : s
+end
+menu_item(s::Vector{State}, a::AddMenuItem) =
+    State[s..., State(a.label, a.shortcut, a.is_selected, a.enabled)]
+menu_item(s::Vector{State}, a::DeleteMenuItem) = filter(s -> s.label !== a.label, s)
+
 function menu_item(state::Dict{String,State}, action::AbstractMenuItemAction)
     s = Dict{String,State}()
     for (k,v) in state
@@ -81,13 +116,6 @@ function menu_item(state::Dict{String,State}, action::AbstractMenuItemAction)
     end
     return s
 end
-
-menu_item(s::State, a::Rename) = State(a.new_label, s.shortcut, s.is_selected, s.is_enabled)
-menu_item(s::State, a::ChangeShortcut) = State(s.label, a.shortcut, s.is_selected, s.is_enabled)
-menu_item(s::State, a::SetSelectedTo) = State(s.label, s.shortcut, a.is_selected, s.is_enabled)
-menu_item(s::State, a::Toggle) = State(s.label, s.shortcut, !s.is_selected, s.is_enabled)
-menu_item(s::State, a::Enable) = State(s.label, s.shortcut, s.is_selected, true)
-menu_item(s::State, a::Disable) = State(s.label, s.shortcut, s.is_selected, false)
 
 # helper
 """

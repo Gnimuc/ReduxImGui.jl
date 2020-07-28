@@ -61,7 +61,7 @@ Return `true` when pressed.
 """
 function ArrowButton(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
-    is_clicked = CImGui.ArrowButton(state.id, state.direction)
+    is_clicked = CImGui.ArrowButton(s.id, s.direction)
     return is_clicked
 end
 

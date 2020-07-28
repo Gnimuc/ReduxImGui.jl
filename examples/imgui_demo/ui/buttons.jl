@@ -33,8 +33,8 @@ function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button1"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        b2 = state.radio_buttons["basic_radio_button2"]
-        b3 = state.radio_buttons["basic_radio_button3"]
+        b2 = s.radio_buttons["basic_radio_button2"]
+        b3 = s.radio_buttons["basic_radio_button3"]
         dispatch!(store, RadioButtons.SetActiveTo(b2.label, false))
         dispatch!(store, RadioButtons.SetActiveTo(b3.label, false))
     end
@@ -43,8 +43,8 @@ function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button2"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        b1 = state.radio_buttons["basic_radio_button1"]
-        b3 = state.radio_buttons["basic_radio_button3"]
+        b1 = s.radio_buttons["basic_radio_button1"]
+        b3 = s.radio_buttons["basic_radio_button3"]
         dispatch!(store, RadioButtons.SetActiveTo(b1.label, false))
         dispatch!(store, RadioButtons.SetActiveTo(b3.label, false))
     end
@@ -53,8 +53,8 @@ function radio_button_group(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     if ReduxImGui.RadioButton(store, s->get_state(s).radio_buttons["basic_radio_button3"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
-        b1 = state.radio_buttons["basic_radio_button1"]
-        b2 = state.radio_buttons["basic_radio_button2"]
+        b1 = s.radio_buttons["basic_radio_button1"]
+        b2 = s.radio_buttons["basic_radio_button2"]
         dispatch!(store, RadioButtons.SetActiveTo(b1.label, false))
         dispatch!(store, RadioButtons.SetActiveTo(b2.label, false))
     end

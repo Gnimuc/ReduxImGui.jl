@@ -82,9 +82,9 @@ Return `true` when pressed. See also [`is_check`](@ref).
 """
 function Checkbox(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
-    check_ref = Ref(state.is_check)
-    is_pressed = CImGui.Checkbox(state.label, check_ref)
-    is_pressed && dispatch!(store, SetTo(state.label, check_ref[]))
+    check_ref = Ref(s.is_check)
+    is_pressed = CImGui.Checkbox(s.label, check_ref)
+    is_pressed && dispatch!(store, SetTo(s.label, check_ref[]))
     return is_pressed
 end
 
