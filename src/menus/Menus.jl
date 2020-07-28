@@ -79,13 +79,19 @@ Return `true` when activated.
 function Menu(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     is_activated = CImGui.BeginMenu(s.label, s.is_enabled)
-    if is_activated
-        for item in s.items
-            CImGui.MenuItem(item.label, item.shortcut, item.is_selected, item.is_enabled)
+    is_activated || return false
+    for x in s.items
+        if isempty(x.label)
+            CImGui.Separator()
+        elseif CImGui.MenuItem(x.label, x.shortcut, x.is_selected, x.is_enabled)
+            dispatch!(store, Menus.EditMenuItems(s.label, MenuItems.SetClickedTo(x.label, true)))
+            dispatch!(store, Menus.EditMenuItems(s.label, MenuItems.Toggle(x.label)))
+        else
+            dispatch!(store, MenuItems.SetClickedTo(x.label, false))
         end
-        CImGui.EndMenu()
     end
-    return is_activated
+    CImGui.EndMenu()
+    return true
 end
 
 """
@@ -101,6 +107,7 @@ function Menu(f::Function, label::AbstractString, enabled=true)
 end
 
 get_label(s::State) = s.label
+get_items(s::State) = s.items
 
 
 end # module

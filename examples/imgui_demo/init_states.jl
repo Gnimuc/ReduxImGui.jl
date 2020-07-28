@@ -186,3 +186,16 @@ const IMGUI_DEMO_LISTBOX_STATES = Dict(
         4,
     ),
 )
+
+const IMGUI_DEMO_MENU_ITEM_STATES = [
+    MenuItems.State("Undo", "CTRL+Z"),
+    MenuItems.State("Redo", "CTRL+Y", false, false),
+    MenuItems.State(""),
+]
+
+const IMGUI_DEMO_MENU_STATES = Dict(
+    "test_menu" => Menus.State(
+        "menu",
+        IMGUI_DEMO_MENU_ITEM_STATES,
+    )
+)

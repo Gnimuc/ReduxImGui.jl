@@ -20,6 +20,7 @@ include("ui/drags.jl")
 include("ui/sliders.jl")
 include("ui/colors.jl")
 include("ui/listboxes.jl")
+include("ui/menus.jl")
 
 # actions
 abstract type AbstractAppDemoAction <: AbstractSyncAction end
@@ -45,6 +46,7 @@ struct State <: AbstractImmutableState
     slider_strings::Dict{String,SliderStrings.State}
     color_edits::Dict{String,ColorEdits.State}
     listboxes::Dict{String,ListBoxes.State}
+    menus::Dict{String,Menus.State}
 end
 
 # constants
@@ -70,6 +72,7 @@ const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_SLIDER_STRING_STATES,
     IMGUI_DEMO_COLOR_EDIT_STATES,
     IMGUI_DEMO_LISTBOX_STATES,
+    IMGUI_DEMO_MENU_STATES,
 )
 
 # reducers
@@ -97,6 +100,7 @@ function app_demo(state::State, action::AbstractAction)
     next_slider_string_state = SliderStrings.slider_string(state.slider_strings, action)
     next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
     next_listbox_state = ListBoxes.listbox(state.listboxes, action)
+    next_menus_state = Menus.menu(state.menus, action)
     return State(next_button_state,
                  next_checkbox_state,
                  next_radio_button_state,
@@ -115,7 +119,8 @@ function app_demo(state::State, action::AbstractAction)
                  next_slider_angle_state,
                  next_slider_string_state,
                  next_color_edit_state,
-                 next_listbox_state)
+                 next_listbox_state,
+                 next_menus_state)
 end
 
 # helper
@@ -174,7 +179,7 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
 
     ReduxImGui.TreeNode("Advanced, with Selectable nodes") do
         ShowHelpMarker("This is a more standard looking tree with selectable nodes.\nClick to select, CTRL+Click to toggle, click on arrows or double-click to open.")
-
+        naive_menus(store, get_state)
 
     end
     CImGui.End()
