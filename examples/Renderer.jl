@@ -59,7 +59,7 @@ function renderloop(window, ctx, ui=()->nothing)
             ImGui_ImplGlfw_NewFrame()
             CImGui.NewFrame()
 
-            ui()
+            Base.invokelatest(ui)
 
             CImGui.Render()
             GLFW.MakeContextCurrent(window)
