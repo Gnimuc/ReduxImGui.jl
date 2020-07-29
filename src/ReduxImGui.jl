@@ -8,12 +8,17 @@ include("forward_decls.jl")
 ## Buttons
 include("buttons/Buttons.jl")
 using .Buttons
-import .Buttons: Button, is_on, get_size
+import .Buttons: Button
 export Buttons
+
+include("buttons/OnOffButtons.jl")
+using .OnOffButtons
+import .OnOffButtons: OnOffButton
+export OnOffButtons
 
 include("buttons/ColorButtons.jl")
 using .ColorButtons
-import .ColorButtons: ColorButton, get_hovered_color, get_active_color
+import .ColorButtons: ColorButton
 export ColorButtons
 
 include("buttons/RadioButtons.jl")

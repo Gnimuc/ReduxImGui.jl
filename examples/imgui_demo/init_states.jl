@@ -1,4 +1,7 @@
-IMGUI_DEMO_BUTTON_STATES = Dict("basic_button" => Buttons.State("Button"))
+IMGUI_DEMO_BUTTON_STATES = Dict(
+    "basic_button" => OnOffButtons.State("Button"),
+    "basic_button2" => Buttons.State("Button2"),
+)
 
 IMGUI_DEMO_CHECKBOX_STATES =
     Dict("basic_checkbox" => Checkboxes.State("checkbox"))

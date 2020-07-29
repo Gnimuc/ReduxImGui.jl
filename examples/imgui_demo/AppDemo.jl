@@ -26,7 +26,7 @@ abstract type AbstractAppDemoAction <: AbstractSyncAction end
 
 # state
 struct State <: AbstractImmutableState
-    buttons::Dict{String,Buttons.State}
+    buttons::Dict{String,Buttons.AbstractButtonState}
     checkboxes::Dict{String,Checkboxes.State}
     radio_buttons::Dict{String,RadioButtons.State}
     color_buttons::Dict{String,ColorButtons.State}
@@ -78,7 +78,9 @@ app_demo(state::Vector{<:AbstractState}, action::AbstractAction) = state
 app_demo(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
 function app_demo(state::State, action::AbstractAction)
-    next_button_state = Buttons.button(state.buttons, action)
+    next_button_state = Buttons.reducer(state.buttons, action)
+    next_button_state = OnOffButtons.reducer(next_button_state, action)
+
     next_checkbox_state = Checkboxes.checkbox(state.checkboxes, action)
     next_radio_button_state = RadioButtons.radio_button(state.radio_buttons, action)
     next_color_button_state = ColorButtons.color_button(state.color_buttons, action)
@@ -123,6 +125,7 @@ end
     ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
 """
 function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
+    CImGui.ShowDemoWindow(Ref(true))
     CImGui.SetNextWindowPos((650, 20), CImGui.ImGuiCond_FirstUseEver)
     CImGui.SetNextWindowSize((550, 680), CImGui.ImGuiCond_FirstUseEver)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)

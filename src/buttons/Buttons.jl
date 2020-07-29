@@ -2,8 +2,6 @@ module Buttons
 
 using Redux
 using CImGui
-import CImGui: ImVec2
-import ..ReduxImGui: get_label
 
 # actions
 abstract type AbstractButtonAction <: AbstractSyncAction end
@@ -16,6 +14,15 @@ Note that renaming may also change the identifier, please refer to `help?> CImGu
 struct Rename <: AbstractButtonAction
     label::String
     new_label::String
+end
+
+"""
+    SetTriggeredTo(label, is_triggered)
+Update widget's `is_triggered` state.
+"""
+struct SetTriggeredTo <: AbstractButtonAction
+    label::String
+    is_triggered::Bool
 end
 
 """
@@ -46,63 +53,54 @@ struct ChangeHeight <: AbstractButtonAction
     height::Cfloat
 end
 
-"""
-    Toggle(label)
-Toggle button's `is_clicked` state.
-"""
-struct Toggle <: AbstractButtonAction
-    label::String
-end
-
 # state
-struct State <: AbstractImmutableState
+abstract type AbstractButtonState <: AbstractImmutableState end
+
+"""
+    Buttons.State(label::AbstractString)
+    Buttons.State(label::AbstractString, size)
+    Buttons.State(label::AbstractString, size, is_triggered)
+A simple button state which contains a label a.k.a the identifier,
+a size tuple (x,y) and a flag value `is_triggered` that records the state of
+the latest poll events.
+"""
+struct State <: AbstractButtonState
     label::String
-    size::ImVec2
-    is_clicked::Bool
+    size::Tuple{Cfloat,Cfloat}
+    is_triggered::Bool
 end
 State(label::AbstractString, size) = State(label, size, false)
-State(label::AbstractString) = State(label, ImVec2(0,0))
+State(label::AbstractString) = State(label, (0,0))
 
 # reducers
-button(state::AbstractState, action::AbstractAction) = state
-button(state::Vector{<:AbstractState}, action::AbstractAction) = state
-button(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
+reducer(state::AbstractState, action::AbstractAction) = state
+reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
+reducer(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
-function button(state::Dict{String,State}, action::AbstractButtonAction)
-    s = Dict{String,State}()
-    for (k,v) in state
-        s[k] = get_label(v) == action.label ? button(v, action) : v
-    end
-    return s
-end
+reducer(s::State, a::Rename) = State(a.new_label, s.size, s.is_triggered)
+reducer(s::State, a::Resize) = State(s.label, (a.x, a.y), s.is_triggered)
+reducer(s::State, a::ChangeWidth) = State(s.label, (a.width, s.size[2]), s.is_triggered)
+reducer(s::State, a::ChangeHeight) = State(s.label, (s.size[1], a.height), s.is_triggered)
+reducer(s::State, a::SetTriggeredTo) = State(s.label, s.size, a.is_triggered)
 
-button(s::State, a::Rename) = State(a.new_label, s.size, s.is_clicked)
-button(s::State, a::Resize) = State(s.label, ImVec2(a.x, a.y), s.is_clicked)
-button(s::State, a::ChangeWidth) = State(s.label, ImVec2(a.width, s.size.y), s.is_clicked)
-button(s::State, a::ChangeHeight) = State(s.label, ImVec2(s.size.x, a.height), s.is_clicked)
-button(s::State, a::Toggle) = State(s.label, s.size, !s.is_clicked)
+reducer(s::Dict{String,<:AbstractButtonState}, a::AbstractButtonAction) =
+    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
 
 # helper
 """
     Button(store::AbstractStore, get_state=Redux.get_state) -> Bool
-Return `true` when pressed. It also maintains a `is_clicked` state which can be
-used to implement an on/off button, see also [`is_on`](@ref).
+Return `true` when triggered.
+`get_state` is a router function which tells how to find the target button
+state from `store`.
 """
 function Button(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
-    is_clicked = CImGui.Button(get_label(s), get_size(s))
-    is_clicked && dispatch!(store, Toggle(get_label(s)))
-    return is_clicked
+    is_triggered = CImGui.Button(s.label, CImGui.ImVec2(s.size...))
+    dispatch!(store, SetTriggeredTo(s.label, is_triggered))
+    return is_triggered
 end
 
-"""
-    is_on(s::State) -> Bool
-Return `true` when the button is on.
-"""
-is_on(s::State) = s.is_clicked
-
+get_label(s::AbstractButtonState) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
 get_label(s::State) = s.label
-
-get_size(s::State) = s.size
 
 end # module
