@@ -40,9 +40,7 @@ reducer(s::Dict{String,<:AbstractButtonState}, a::AbstractButtonAction) =
 # helper
 """
     OnOffButton(store::AbstractStore, get_state=Redux.get_state) -> Bool
-Return `true` when triggered.
-`get_state` is a router function which tells how to find the target button
-state from `store`.
+A wrapper over [`Buttons.Button`](@ref) with an additional on/off state.
 """
 function OnOffButton(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)

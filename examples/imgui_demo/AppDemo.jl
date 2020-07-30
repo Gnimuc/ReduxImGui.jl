@@ -3,6 +3,7 @@ module AppDemo
 using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
+using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
 
 # additional widgets
 include("../widgets/Repeaters.jl")
@@ -27,9 +28,9 @@ abstract type AbstractAppDemoAction <: AbstractSyncAction end
 # state
 struct State <: AbstractImmutableState
     buttons::Dict{String,Buttons.AbstractButtonState}
+    color_button_vec::Vector{ColorButtons.State}
     checkboxes::Dict{String,Checkboxes.State}
     radio_buttons::Dict{String,RadioButtons.State}
-    color_buttons::Dict{String,ColorButtons.State}
     repeaters::Dict{String,Repeaters.State}
     combos::Dict{String,Combos.State}
     input_texts::Dict{String,InputTexts.State}
@@ -52,9 +53,9 @@ include("init_states.jl")
 
 const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_BUTTON_STATES,
+    IMGUI_DEMO_COLOR_BUTTON_STATES,
     IMGUI_DEMO_CHECKBOX_STATES,
     IMGUI_DEMO_RADIO_BUTTON_STATES,
-    IMGUI_DEMO_COLOR_BUTTON_STATES,
     IMGUI_DEMO_REPEATER_STATES,
     IMGUI_DEMO_COMBO_STATES,
     IMGUI_DEMO_INPUT_TEXT_STATES,
@@ -73,17 +74,25 @@ const IMGUI_DEMO_STATE = AppDemo.State(
 )
 
 # reducers
-app_demo(state::AbstractState, action::AbstractAction) = state
-app_demo(state::Vector{<:AbstractState}, action::AbstractAction) = state
-app_demo(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
+reducer(state::AbstractState, action::AbstractAction) = state
+reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
+reducer(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
-function app_demo(state::State, action::AbstractAction)
-    next_button_state = Buttons.reducer(state.buttons, action)
-    next_button_state = OnOffButtons.reducer(next_button_state, action)
+function reducer(state::Dict{String,Buttons.AbstractButtonState}, action::AbstractButtonAction)
+    next_state = Buttons.reducer(state, action)
+    next_state = OnOffButtons.reducer(next_state, action)
+    next_state = ColorButtons.reducer(next_state, action)
+    return next_state
+end
 
+function reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction)
+    next_state = ColorButtons.reducer(state, action)
+    return next_state
+end
+
+function reducer(state::State, action::AbstractAction)
     next_checkbox_state = Checkboxes.checkbox(state.checkboxes, action)
     next_radio_button_state = RadioButtons.radio_button(state.radio_buttons, action)
-    next_color_button_state = ColorButtons.color_button(state.color_buttons, action)
     next_repeater_state = Repeaters.repeater(state.repeaters, action)
     next_combo_state = Combos.combo(state.combos, action)
     next_input_text_state = InputTexts.input_text(state.input_texts, action)
@@ -99,10 +108,10 @@ function app_demo(state::State, action::AbstractAction)
     next_slider_string_state = SliderStrings.slider_string(state.slider_strings, action)
     next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
     next_listbox_state = ListBoxes.listbox(state.listboxes, action)
-    return State(next_button_state,
+    return State(reducer(state.buttons, action),
+                 reducer(state.color_button_vec, action),
                  next_checkbox_state,
                  next_radio_button_state,
-                 next_color_button_state,
                  next_repeater_state,
                  next_combo_state,
                  next_input_text_state,
@@ -130,7 +139,7 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
     CImGui.SetNextWindowSize((550, 680), CImGui.ImGuiCond_FirstUseEver)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)
     ReduxImGui.TreeNode("Basic") do
-        naive_button(store, get_state)
+        basic_button(store, get_state)
         naive_checkbox(store, get_state)
         radio_button_group(store, get_state)
         color_buttons(store, get_state)

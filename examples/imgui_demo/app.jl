@@ -9,7 +9,7 @@ include("../Renderer.jl")
 using .Renderer
 
 ## create store
-store = create_store(AppDemo.app_demo, AppDemo.IMGUI_DEMO_STATE)
+store = create_store(AppDemo.reducer, AppDemo.IMGUI_DEMO_STATE)
 
 ## draw UI
 Renderer.render(

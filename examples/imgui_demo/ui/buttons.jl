@@ -3,7 +3,7 @@ using ReduxImGui.Redux
 using ReduxImGui.CImGui
 using ReduxImGui.OnOffButtons
 
-function naive_button(store::AbstractStore, get_state=Redux.get_state)
+function basic_button(store::AbstractStore, get_state=Redux.get_state)
     if ReduxImGui.OnOffButton(store, s->get_state(s).buttons["basic_button"])
         @info "This triggers $(@__FILE__):$(@__LINE__)."
     end
@@ -15,17 +15,15 @@ function naive_button(store::AbstractStore, get_state=Redux.get_state)
 end
 
 function color_buttons(store::AbstractStore, get_state=Redux.get_state)
-    i = 0
-    for (k,v) in get_state(store).color_buttons
-        label = ReduxImGui.get_label(v)
-        dispatch!(store, ColorButtons.SetButtonColorTo(label, CImGui.HSV(i/7.0, 0.6, 0.6)))
-        dispatch!(store, ColorButtons.SetHoveredColorTo(label, CImGui.HSV(i/7.0, 0.7, 0.7)))
-        dispatch!(store, ColorButtons.SetActiveColorTo(label, CImGui.HSV(i/7.0, 0.8, 0.8)))
-        if ReduxImGui.ColorButton(store, s->get_state(s).color_buttons[k])
+    for (i, cb) in enumerate(get_state(store).color_button_vec)
+        label = ReduxImGui.ColorButtons.get_label(cb)
+        dispatch!(store, ColorButtons.SetButtonColorTo(label, CImGui.HSV((i-1)/7.0, 0.6, 0.6)))
+        dispatch!(store, ColorButtons.SetHoveredColorTo(label, CImGui.HSV((i-1)/7.0, 0.7, 0.7)))
+        dispatch!(store, ColorButtons.SetActiveColorTo(label, CImGui.HSV((i-1)/7.0, 0.8, 0.8)))
+        if ReduxImGui.ColorButton(store, s->get_state(s).color_button_vec[i])
             @info "This triggers $(@__FILE__):$(@__LINE__)."
         end
         CImGui.SameLine()
-        i += 1
     end
     CImGui.NewLine()
 end
