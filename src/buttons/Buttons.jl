@@ -53,6 +53,24 @@ struct ChangeHeight <: AbstractButtonAction
     height::Cfloat
 end
 
+"""
+    AddButton(label::AbstractString, size = (0,0))
+Add a [`Button`](@ref).
+"""
+struct AddButton <: AbstractButtonAction
+    label::String
+    size::Tuple{Cfloat,Cfloat}
+end
+AddButton(label::AbstractString) = AddButton(label, (0,0))
+
+"""
+    DeleteButton(label::AbstractString)
+Delete the [`Button`](@ref).
+"""
+struct DeleteButton <: AbstractButtonAction
+    label::String
+end
+
 # state
 abstract type AbstractButtonState <: AbstractImmutableState end
 
@@ -86,6 +104,14 @@ reducer(s::State, a::SetTriggeredTo) = State(s.label, s.size, a.is_triggered)
 reducer(s::Dict{String,<:AbstractButtonState}, a::AbstractButtonAction) =
     Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
 
+reducer(s::Vector{State}, a::AbstractButtonAction) = map(s) do s
+    get_label(s) === a.label ? reducer(s, a) : s
+end
+
+reducer(s::Vector{State}, a::AddButton) =
+    State[s..., State(a.label, a.size, false)]
+reducer(s::Vector{State}, a::DeleteButton) = filter(s -> s.label !== a.label, s)
+
 # helper
 """
     Button(store::AbstractStore, get_state=Redux.get_state) -> Bool
@@ -102,5 +128,8 @@ end
 
 get_label(s::AbstractButtonState) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
 get_label(s::State) = s.label
+
+get_size(s::State) = s.size
+
 
 end # module

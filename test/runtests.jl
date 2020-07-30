@@ -1,4 +1,4 @@
 using ReduxImGui
 using Test
 
-include("button.jl")
+include("buttons.jl")
