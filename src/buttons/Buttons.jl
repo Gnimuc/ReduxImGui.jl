@@ -130,6 +130,6 @@ get_label(s::AbstractButtonState) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
 get_label(s::State) = s.label
 
 get_size(s::State) = s.size
-
+is_triggered(s::State) = s.is_triggered
 
 end # module
