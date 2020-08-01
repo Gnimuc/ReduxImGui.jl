@@ -125,7 +125,7 @@ function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     return is_triggered
 end
 
-get_label(s::AbstractButtonState) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
+get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
 get_label(s::State) = s.button.label
 
 get_size(s::State) = s.button.size

@@ -4,6 +4,8 @@ using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui
 using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
+using ReduxImGui.RadioButtonGroups: AbstractRadioButtonGroupAction
+
 
 # additional widgets
 include("../widgets/Repeaters.jl")
@@ -28,9 +30,9 @@ abstract type AbstractAppDemoAction <: AbstractSyncAction end
 # state
 struct State <: AbstractImmutableState
     buttons::Dict{String,Buttons.AbstractButtonState}
-    color_button_vec::Vector{ColorButtons.State}
     checkboxes::Dict{String,Checkboxes.State}
-    radio_buttons::Dict{String,RadioButtons.State}
+    radio_button_group::RadioButtonGroups.State
+    colorful_buttons::Vector{ColorButtons.State}
     repeaters::Dict{String,Repeaters.State}
     combos::Dict{String,Combos.State}
     input_texts::Dict{String,InputTexts.State}
@@ -53,9 +55,9 @@ include("init_states.jl")
 
 const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_BUTTON_STATES,
-    IMGUI_DEMO_COLOR_BUTTON_STATES,
     IMGUI_DEMO_CHECKBOX_STATES,
-    IMGUI_DEMO_RADIO_BUTTON_STATES,
+    IMGUI_DEMO_RADIO_BUTTON_GROUP_STATES,
+    IMGUI_DEMO_COLOR_BUTTON_STATES,
     IMGUI_DEMO_REPEATER_STATES,
     IMGUI_DEMO_COMBO_STATES,
     IMGUI_DEMO_INPUT_TEXT_STATES,
@@ -90,9 +92,13 @@ function reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction
     return next_state
 end
 
+function reducer(state::RadioButtonGroups.State, action::AbstractRadioButtonGroupAction)
+    next_state = RadioButtonGroups.reducer(state, action)
+    return next_state
+end
+
 function reducer(state::State, action::AbstractAction)
     next_checkbox_state = Checkboxes.checkbox(state.checkboxes, action)
-    next_radio_button_state = RadioButtons.radio_button(state.radio_buttons, action)
     next_repeater_state = Repeaters.repeater(state.repeaters, action)
     next_combo_state = Combos.combo(state.combos, action)
     next_input_text_state = InputTexts.input_text(state.input_texts, action)
@@ -109,9 +115,9 @@ function reducer(state::State, action::AbstractAction)
     next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
     next_listbox_state = ListBoxes.listbox(state.listboxes, action)
     return State(reducer(state.buttons, action),
-                 reducer(state.color_button_vec, action),
                  next_checkbox_state,
-                 next_radio_button_state,
+                 reducer(state.radio_button_group, action),
+                 reducer(state.colorful_buttons, action),
                  next_repeater_state,
                  next_combo_state,
                  next_input_text_state,

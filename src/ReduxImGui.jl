@@ -23,8 +23,13 @@ export ColorButtons
 
 include("buttons/RadioButtons.jl")
 using .RadioButtons
-import .RadioButtons: RadioButton, is_active
+import .RadioButtons: RadioButton
 export RadioButtons
+
+include("buttons/RadioButtonGroups.jl")
+using .RadioButtonGroups
+import .RadioButtonGroups: RadioButtonGroup
+export RadioButtonGroups
 
 include("buttons/ArrowButtons.jl")
 using .ArrowButtons

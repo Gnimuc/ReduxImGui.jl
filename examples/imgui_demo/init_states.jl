@@ -6,11 +6,11 @@ IMGUI_DEMO_BUTTON_STATES = Dict(
 IMGUI_DEMO_CHECKBOX_STATES =
     Dict("basic_checkbox" => Checkboxes.State("checkbox"))
 
-IMGUI_DEMO_RADIO_BUTTON_STATES = Dict(
-    "basic_radio_button1" => RadioButtons.State("radio a"),
-    "basic_radio_button2" => RadioButtons.State("radio b"),
-    "basic_radio_button3" => RadioButtons.State("radio c"),
-)
+IMGUI_DEMO_RADIO_BUTTON_GROUP_STATES = 
+    RadioButtonGroups.State("radio button group", 
+                            [RadioButtons.State("radio a"),
+                             RadioButtons.State("radio b"),
+                             RadioButtons.State("radio c")])
 
 IMGUI_DEMO_COLOR_BUTTON_STATES = [
     ColorButtons.State("click##1"),
