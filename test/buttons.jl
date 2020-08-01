@@ -34,7 +34,7 @@ using Test
     @test get_state(store).size[2] == 77
 
     dispatch!(store, Buttons.SetTriggeredTo(state.label, true))
-    @test get_state(store).size[2] == 77
+    @test get_state(store).is_triggered == true
 
     # test vectors
     store = create_store(Buttons.reducer, [Buttons.State("b1"),Buttons.State("b2")])
@@ -132,4 +132,85 @@ end
     dispatch!(store, ColorButtons.Resize("b2", 10, 20))
     state = get_state(store)
     @test ColorButtons.get_size(state["b2"]) == (10,20) 
+end
+
+@testset "Buttons | RadioButton" begin
+    name = "Radio_button_test"
+    store = create_store(RadioButtons.reducer, RadioButtons.State(name))
+    state = get_state(store)
+
+    # test initial state
+    @test state.label == name
+    @test state.is_active == false
+    @test state.is_triggered == false
+
+    # test actions
+    new_name = "Radio_button_new_name"
+    state = get_state(store)
+    dispatch!(store, RadioButtons.Rename(state.label, new_name))
+    @test get_state(store).label == new_name
+    dispatch!(store, RadioButtons.Rename(state.label, name))
+    @test RadioButtons.get_label(get_state(store)) == name
+
+    dispatch!(store, RadioButtons.SetActiveTo(state.label, true))
+    @test get_state(store).is_active == true
+
+    dispatch!(store, RadioButtons.SetTriggeredTo(state.label, true))
+    @test get_state(store).is_triggered == true
+
+    # test vectors
+    store = create_store(RadioButtons.reducer, [RadioButtons.State("b1"),RadioButtons.State("b2")])
+    state = get_state(store) 
+    dispatch!(store, RadioButtons.AddButton("b3"))
+    dispatch!(store, RadioButtons.DeleteButton("b1"))
+    state = get_state(store)
+    @test state[1] == RadioButtons.State("b2")
+    @test state[2] == RadioButtons.State("b3")
+    dispatch!(store, RadioButtons.SetTriggeredTo("b2", true))
+    @test RadioButtons.is_triggered(get_state(store)[1]) == true
+
+    dispatch!(store, RadioButtons.OnlySetThisOneToActive("b3"))
+    @test RadioButtons.is_active(get_state(store)[1]) == false
+    @test RadioButtons.is_active(get_state(store)[2]) == true
+
+    # test dicts
+    store = create_store(RadioButtons.reducer, Dict("b1"=>RadioButtons.State("b1"),"b2"=>RadioButtons.State("b2")))
+    state = get_state(store)
+    dispatch!(store, RadioButtons.SetActiveTo("b2", true))
+    state = get_state(store)
+    @test RadioButtons.is_active(state["b2"]) == true
+end
+
+@testset "Buttons | RadioButtonGroup" begin
+    RBG = RadioButtonGroups
+    name = "Radio_button_group_test"
+    store = create_store(RBG.reducer, RBG.State(name))
+    state = get_state(store)
+
+    # test initial state
+    @test state.label == name
+    @test isempty(state.buttons) == true
+    @test state.is_triggered == false
+
+    # test actions
+    new_name = "Radio_button_group_new_name"
+    state = get_state(store)
+    dispatch!(store, RBG.Rename(state.label, new_name))
+    @test get_state(store).label == new_name
+    dispatch!(store, RBG.Rename(state.label, name))
+    @test RBG.get_label(get_state(store)) == name
+
+    dispatch!(store, RBG.SetTriggeredTo(state.label, true))
+    @test get_state(store).is_triggered == true
+
+    dispatch!(store, RBG.EditButtons(state.label, RadioButtons.AddButton("radio button1")))
+    dispatch!(store, RBG.EditButtons(state.label, RadioButtons.SetActiveTo("radio button1", true)))
+    @test get_state(store).buttons[1].is_active == true
+
+    # test dicts
+    store = create_store(RBG.reducer, Dict("b1"=>RBG.State("b1"),"b2"=>RBG.State("b2")))
+    state = get_state(store)
+    dispatch!(store, RBG.EditButtons(RBG.get_label(state["b1"]), RadioButtons.AddButton("radio button1")))
+    state = get_state(store)
+    @test state["b1"].buttons[1].label == "radio button1"
 end
