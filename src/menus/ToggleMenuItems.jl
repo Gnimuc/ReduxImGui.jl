@@ -3,7 +3,7 @@ module ToggleMenuItems
 using Redux
 using CImGui
 using ..MenuItems
-import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label, has_is_selected
+import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
 
 # actions
 const Rename = MenuItems.Rename 
@@ -67,7 +67,6 @@ get_shortcut(s::State) = s.menu_item.shortcut
 is_triggered(s::State) = s.menu_item.is_triggered
 is_enabled(s::State) = s.menu_item.is_enabled
 is_selected(s::State) = s.is_selected
-has_is_selected(s::State) = true
 
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state

@@ -75,7 +75,8 @@ struct DeleteMenu <: AbstractMenuAction
 end
 
 # state
-abstract type AbstractMenuState <: AbstractImmutableState end
+# note the menu itself could be a menu item of another menu
+abstract type AbstractMenuState <: AbstractMenuItemState end 
 
 """
     Menus.State(label::AbstractString, items = [], is_enabled = true)
@@ -133,7 +134,7 @@ function Menu(store::AbstractStore, get_state=Redux.get_state)
     dispatch!(store, SetTriggeredTo(s.label, is_activated))
     !is_activated && return false
     for item in s.items
-        if MenuItems.has_is_selected(item)
+        if item isa ToggleMenuItems.State
             x = CImGui.MenuItem(item.label, item.shortcut, item.is_selected, item.is_enabled)
             x && dispatch!(store, ToggleMenuItems.Toggle(item.label))
         else

@@ -93,7 +93,6 @@ State(label::AbstractString, shortcut = "", is_enabled = true) =
 get_shortcut(s::State) = s.shortcut
 is_triggered(s::State) = s.is_triggered
 is_enabled(s::State) = s.is_enabled
-has_is_selected(s::State) = false
 
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state

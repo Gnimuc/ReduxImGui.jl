@@ -36,13 +36,13 @@ using Test
     @test MenuItems.is_triggered(get_state(store)) == true
 
     # test vectors
-    store = create_store(MenuItems.reducer, [MenuItems.State("m1"),MenuItems.State("m2")])
+    store = create_store(MenuItems.reducer, [MenuItems.State("m1"),MenuItems.State("m2"),MenuItemSeparators.State()])
     state = get_state(store) 
     dispatch!(store, MenuItems.AddMenuItem("m3"))
     dispatch!(store, MenuItems.DeleteMenuItem("m1"))
     state = get_state(store)
     @test state[1] == MenuItems.State("m2")
-    @test state[2] == MenuItems.State("m3")
+    @test state[3] == MenuItems.State("m3")
     dispatch!(store, MenuItems.SetTriggeredTo("m2", false))
     @test MenuItems.is_triggered(get_state(store)[1]) == false
 

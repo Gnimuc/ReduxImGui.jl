@@ -129,6 +129,10 @@ using .ToggleMenuItems
 import .ToggleMenuItems: ToggleMenuItem
 export ToggleMenuItems
 
+include("menus/MenuItemSeparators.jl")
+using .MenuItemSeparators
+export MenuItemSeparators
+
 include("menus/Menus.jl")
 using .Menus
 import .Menus: Menu
