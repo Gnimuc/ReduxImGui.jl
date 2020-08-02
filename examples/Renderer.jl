@@ -51,7 +51,7 @@ function init_renderer(width, height, title::AbstractString)
     return window, ctx
 end
 
-function renderloop(window, ctx, ui=()->nothing)
+function renderloop(window, ctx, ui=()->nothing, hotloading=false)
     try
         while !GLFW.WindowShouldClose(window)
             GLFW.PollEvents()
@@ -59,7 +59,7 @@ function renderloop(window, ctx, ui=()->nothing)
             ImGui_ImplGlfw_NewFrame()
             CImGui.NewFrame()
 
-            Base.invokelatest(ui)
+            hotloading ? Base.invokelatest(ui) : ui()
 
             CImGui.Render()
             GLFW.MakeContextCurrent(window)
@@ -84,10 +84,10 @@ function renderloop(window, ctx, ui=()->nothing)
     end
 end
 
-function render(ui; width=1280, height=720, title::AbstractString="Demo")
+function render(ui; width=1280, height=720, title::AbstractString="Demo", hotloading=false)
     window, ctx = init_renderer(width, height, title)
     GC.@preserve window ctx begin
-        t = @async renderloop(window, ctx, ui)
+        t = @async renderloop(window, ctx, ui, hotloading)
     end
     return t
 end

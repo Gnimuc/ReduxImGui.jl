@@ -2,7 +2,6 @@ module MenuItems
 
 using Redux
 using CImGui
-import ..ReduxImGui: get_label
 
 # actions
 abstract type AbstractMenuItemAction <: AbstractSyncAction end
@@ -15,6 +14,15 @@ Note that renaming may also change the identifier, please refer to `help?> CImGu
 struct Rename <: AbstractMenuItemAction
     label::String
     new_label::String
+end
+
+"""
+    SetTriggeredTo(label, is_triggered)
+Update widget's `is_triggered` state.
+"""
+struct SetTriggeredTo <: AbstractMenuItemAction
+    label::String
+    is_triggered::Bool
 end
 
 """
@@ -81,55 +89,70 @@ struct DeleteMenuItem <: AbstractMenuItemAction
 end
 
 # state
-struct State <: AbstractImmutableState
+abstract type AbstractMenuItemState <: AbstractImmutableState end
+
+"""
+    MenuItems.State(label::AbstractString, shortcut = "", is_selected = false, is_enabled = true)
+A menu item state which contains a label a.k.a the identifier, a shortcut string,
+a flag value `is_selected`, a flag value `is_enabled` and a flag value `is_triggered` 
+that records the state of the latest poll events.
+"""
+struct State <: AbstractMenuItemState
     label::String
     shortcut::String
     is_selected::Bool
     is_enabled::Bool
+    is_triggered::Bool
 end
-State(label::AbstractString, shortcut = "", is_selected = false) =
-    State(label, shortcut, is_selected, true)
+State(label::AbstractString, shortcut = "", is_selected = false, is_enabled = true) =
+    State(label, shortcut, is_selected, is_enabled, false)
 
 # reducers
-menu_item(state::AbstractState, action::AbstractAction) = state
-menu_item(state::Vector{<:AbstractState}, action::AbstractAction) = state
-menu_item(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
+reducer(state::AbstractState, action::AbstractAction) = state
+reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
+reducer(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
-menu_item(s::State, a::Rename) = State(a.new_label, s.shortcut, s.is_selected, s.is_enabled)
-menu_item(s::State, a::ChangeShortcut) = State(s.label, a.shortcut, s.is_selected, s.is_enabled)
-menu_item(s::State, a::SetSelectedTo) = State(s.label, s.shortcut, a.is_selected, s.is_enabled)
-menu_item(s::State, a::Toggle) = State(s.label, s.shortcut, !s.is_selected, s.is_enabled)
-menu_item(s::State, a::Enable) = State(s.label, s.shortcut, s.is_selected, true)
-menu_item(s::State, a::Disable) = State(s.label, s.shortcut, s.is_selected, false)
+reducer(s::State, a::Rename) = State(a.new_label, s.shortcut, s.is_selected, s.is_enabled, s.is_triggered)
+reducer(s::State, a::ChangeShortcut) = State(s.label, a.shortcut, s.is_selected, s.is_enabled, s.is_triggered)
+reducer(s::State, a::SetSelectedTo) = State(s.label, s.shortcut, a.is_selected, s.is_enabled, s.is_triggered)
+reducer(s::State, a::Toggle) = State(s.label, s.shortcut, !s.is_selected, s.is_enabled, s.is_triggered)
+reducer(s::State, a::Enable) = State(s.label, s.shortcut, s.is_selected, true, s.is_triggered)
+reducer(s::State, a::Disable) = State(s.label, s.shortcut, s.is_selected, false, s.is_triggered)
+reducer(s::State, a::SetTriggeredTo) = State(s.label, s.shortcut, s.is_selected, s.is_enabled, a.is_triggered)
 
-menu_item(s::Vector{State}, a::AbstractMenuItemAction) = map(s) do s
-    s.label === a.label ? menu_item(s, a) : s
+reducer(s::Dict{String,<:AbstractMenuItemState}, a::AbstractMenuItemAction) =
+    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
+
+reducer(s::Vector{State}, a::AbstractMenuItemAction) = map(s) do s
+    get_label(s) === a.label ? reducer(s, a) : s
 end
-menu_item(s::Vector{State}, a::AddMenuItem) =
-    State[s..., State(a.label, a.shortcut, a.is_selected, a.enabled)]
-menu_item(s::Vector{State}, a::DeleteMenuItem) = filter(s -> s.label !== a.label, s)
 
-function menu_item(state::Dict{String,State}, action::AbstractMenuItemAction)
-    s = Dict{String,State}()
-    for (k,v) in state
-        s[k] = get_label(v) == action.label ? menu_item(v, action) : v
-    end
-    return s
-end
+reducer(s::Vector{State}, a::AddMenuItem) =
+    State[s..., State(a.label, a.shortcut, a.is_selected, a.is_enabled, false)]
+reducer(s::Vector{State}, a::DeleteMenuItem) = filter(s -> s.label !== a.label, s)
 
 # helper
 """
     MenuItem(store::AbstractStore, get_state=Redux.get_state) -> Bool
-Return `true` when activated.
+Return `true` when triggered/activated.
+`get_state` is a router function which tells how to find the target state from `store`.
 """
 function MenuItem(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     is_activated = CImGui.MenuItem(get_label(s), s.shortcut, s.is_selected, s.is_enabled)
+    dispatch!(store, SetTriggeredTo(s.label, is_activated))
     is_activated && dispatch!(store, Toggle(get_label(s)))
     return is_activated
 end
 
+get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
 get_label(s::State) = s.label
+
+get_shortcut(s::State) = s.shortcut
+
+is_triggered(s::State) = s.is_triggered
+is_selected(s::State) = s.is_selected
+is_enabled(s::State) = s.is_enabled
 
 
 end # module

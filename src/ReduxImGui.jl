@@ -39,7 +39,7 @@ export ArrowButtons
 ## Checkboxes
 include("checkboxes/Checkboxes.jl")
 using .Checkboxes
-import .Checkboxes: Checkbox, is_check
+import .Checkboxes: Checkbox
 export Checkboxes
 
 ## Combos

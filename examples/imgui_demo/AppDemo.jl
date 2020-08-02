@@ -5,6 +5,7 @@ using ReduxImGui.Redux
 using ReduxImGui.CImGui
 using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
 using ReduxImGui.RadioButtonGroups: AbstractRadioButtonGroupAction
+using ReduxImGui.Checkboxes: AbstractCheckboxAction
 
 
 # additional widgets
@@ -87,18 +88,16 @@ function reducer(state::Dict{String,Buttons.AbstractButtonState}, action::Abstra
     return next_state
 end
 
-function reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction)
-    next_state = ColorButtons.reducer(state, action)
-    return next_state
-end
+reducer(state::Dict{String,Checkboxes.State}, action::AbstractCheckboxAction) =
+    Checkboxes.reducer(state, action)
 
-function reducer(state::RadioButtonGroups.State, action::AbstractRadioButtonGroupAction)
-    next_state = RadioButtonGroups.reducer(state, action)
-    return next_state
-end
+reducer(state::RadioButtonGroups.State, action::AbstractRadioButtonGroupAction) =
+    RadioButtonGroups.reducer(state, action)
+
+reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction) =
+    ColorButtons.reducer(state, action)
 
 function reducer(state::State, action::AbstractAction)
-    next_checkbox_state = Checkboxes.checkbox(state.checkboxes, action)
     next_repeater_state = Repeaters.repeater(state.repeaters, action)
     next_combo_state = Combos.combo(state.combos, action)
     next_input_text_state = InputTexts.input_text(state.input_texts, action)
@@ -115,7 +114,7 @@ function reducer(state::State, action::AbstractAction)
     next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
     next_listbox_state = ListBoxes.listbox(state.listboxes, action)
     return State(reducer(state.buttons, action),
-                 next_checkbox_state,
+                 reducer(state.checkboxes, action),
                  reducer(state.radio_button_group, action),
                  reducer(state.colorful_buttons, action),
                  next_repeater_state,
@@ -146,7 +145,7 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)
     ReduxImGui.TreeNode("Basic") do
         basic_button(store, get_state)
-        naive_checkbox(store, get_state)
+        basic_checkbox(store, get_state)
         radio_button_group(store, get_state)
         color_buttons(store, get_state)
 

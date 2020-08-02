@@ -71,25 +71,27 @@ repeater(s::State, a::ChangeArrowToUpDown) = State(
 # helper
 """
     Repeater(store::AbstractStore, get_state=s->Redux.get_state(s)) -> Bool
-Return `true` when pressed.
+Return `true` when triggered.
+`get_state` is a router function which tells how to find the target
+state from `store`.
 """
 function Repeater(store::AbstractStore, get_state=s->Redux.get_state(s))
-    is_pressed = false
+    is_triggered = false
     spacing = CImGui.GetStyle().ItemInnerSpacing.x
     CImGui.PushButtonRepeat(true)
     if ArrowButtons.ArrowButton(store, s->get_state(s).button1)
         dispatch!(store, Decrement(get_state(store).id))
-        is_pressed = true
+        is_triggered = true
     end
     CImGui.SameLine(0.0, spacing)
     if ArrowButtons.ArrowButton(store, s->get_state(s).button2)
         dispatch!(store, Increment(get_state(store).id))
-        is_pressed = true
+        is_triggered = true
     end
     CImGui.PopButtonRepeat()
     CImGui.SameLine()
     CImGui.Text("$(get_state(store).counter)")
-    return is_pressed
+    return is_triggered
 end
 
 end

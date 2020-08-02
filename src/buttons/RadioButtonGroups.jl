@@ -68,8 +68,7 @@ reducer(s::Dict{String,<:AbstractRadioButtonState}, a::AbstractRadioButtonGroupA
 """
     RadioButtonGroup(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when triggered.
-`get_state` is a router function which tells how to find the target button
-state from `store`.
+`get_state` is a router function which tells how to find the target state from `store`.
 """
 function RadioButtonGroup(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
@@ -84,6 +83,7 @@ function RadioButtonGroup(store::AbstractStore, get_state=Redux.get_state)
         CImGui.SameLine()
     end
     CImGui.NewLine()
+    is_triggered && dispatch!(store, SetTriggeredTo(s.label, is_triggered))
     return is_triggered
 end
 

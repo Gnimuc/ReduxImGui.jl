@@ -73,6 +73,12 @@ struct DeleteButton <: AbstractButtonAction
 end
 
 # state
+"""
+    ColorButtons.State(label::AbstractString)
+    ColorButtons.State(label::AbstractString, size)
+    ColorButtons.State(label::AbstractString, size, button_color, hovered_color, active_color)
+A color button state which contains a common button plus three colors.
+"""
 struct State <: AbstractButtonState
     button::Buttons.State
     button_color::ImVec4
@@ -120,7 +126,7 @@ function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonHovered, get_hovered_color(s))
     CImGui.PushStyleColor(CImGui.ImGuiCol_ButtonActive, get_active_color(s))
     is_triggered = CImGui.Button(get_label(s), get_size(s))
-    CImGui.PopStyleColor(3) 
+    CImGui.PopStyleColor(3)
     dispatch!(store, Buttons.SetTriggeredTo(get_label(s), is_triggered))
     return is_triggered
 end

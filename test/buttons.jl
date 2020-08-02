@@ -201,7 +201,7 @@ end
     @test RBG.get_label(get_state(store)) == name
 
     dispatch!(store, RBG.SetTriggeredTo(state.label, true))
-    @test get_state(store).is_triggered == true
+    @test RBG.is_triggered(get_state(store)) == true
 
     dispatch!(store, RBG.EditButtons(state.label, RadioButtons.AddButton("radio button1")))
     dispatch!(store, RBG.EditButtons(state.label, RadioButtons.SetActiveTo("radio button1", true)))
