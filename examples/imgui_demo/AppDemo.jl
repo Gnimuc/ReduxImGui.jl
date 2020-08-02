@@ -6,6 +6,7 @@ using ReduxImGui.CImGui
 using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
 using ReduxImGui.RadioButtonGroups: AbstractRadioButtonGroupAction
 using ReduxImGui.Checkboxes: AbstractCheckboxAction
+using ReduxImGui.Menus: AbstractMenuState, AbstractMenuAction
 
 
 # additional widgets
@@ -49,6 +50,7 @@ struct State <: AbstractImmutableState
     slider_strings::Dict{String,SliderStrings.State}
     color_edits::Dict{String,ColorEdits.State}
     listboxes::Dict{String,ListBoxes.State}
+    menus::Dict{String,Menus.State}
 end
 
 # constants
@@ -74,6 +76,7 @@ const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_SLIDER_STRING_STATES,
     IMGUI_DEMO_COLOR_EDIT_STATES,
     IMGUI_DEMO_LISTBOX_STATES,
+    IMGUI_DEMO_MENU_STATES,
 )
 
 # reducers
@@ -96,6 +99,9 @@ reducer(state::RadioButtonGroups.State, action::AbstractRadioButtonGroupAction) 
 
 reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction) =
     ColorButtons.reducer(state, action)
+
+reducer(state::Dict{String,Menus.State}, action::AbstractMenuAction) =
+    Menus.reducer(state, action)
 
 function reducer(state::State, action::AbstractAction)
     next_repeater_state = Repeaters.repeater(state.repeaters, action)
@@ -131,7 +137,9 @@ function reducer(state::State, action::AbstractAction)
                  next_slider_angle_state,
                  next_slider_string_state,
                  next_color_edit_state,
-                 next_listbox_state)
+                 next_listbox_state,
+                 reducer(state.menus, action),
+                )
 end
 
 # helper
@@ -174,6 +182,10 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
         naive_sliders(store, get_state)
         naive_color_edits(store, get_state)
         naive_listboxes(store, get_state)
+
+        if ReduxImGui.Menu(store, s->get_state(s).menus["demo_menus"])
+            @info "This triggers $(@__FILE__):$(@__LINE__)."
+        end
     end
 
     ReduxImGui.TreeNode("Trees") do

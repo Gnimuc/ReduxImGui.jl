@@ -6,6 +6,8 @@ using CImGui
 # actions
 abstract type AbstractRadioButtonAction <: AbstractSyncAction end
 
+get_label(a::AbstractRadioButtonAction) = a.label
+
 """
     Rename(label, new_label)
 Change radio button's label to `new_label`.
@@ -63,6 +65,8 @@ end
 # state
 abstract type AbstractRadioButtonState <: AbstractImmutableState end
 
+get_label(s::AbstractRadioButtonState) = s.label
+
 """
     RadioButtons.State(label::AbstractString, is_active = false, is_triggered = false)
 A radio button state which contains a label a.k.a the identifier, a flag value `is_active` and 
@@ -75,6 +79,9 @@ struct State <: AbstractRadioButtonState
 end
 State(label::AbstractString, is_active = false) = State(label, is_active, false)
 
+is_active(s::State) = s.is_active
+is_triggered(s::State) = s.is_triggered
+
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state
 reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
@@ -85,19 +92,20 @@ reducer(s::State, a::SetActiveTo) = State(s.label, a.is_active, s.is_triggered)
 reducer(s::State, a::SetTriggeredTo) = State(s.label, s.is_active, a.is_triggered)
 
 reducer(s::Dict{String,<:AbstractRadioButtonState}, a::AbstractRadioButtonAction) =
-    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
+    Dict(k => (get_label(v) == get_label(a) ? reducer(v, a) : v) for (k, v) in s)
 
-reducer(s::Vector{State}, a::AbstractRadioButtonAction) = map(s) do s
-    get_label(s) === a.label ? reducer(s, a) : s
+reducer(s::Vector{<:AbstractRadioButtonState}, a::AbstractRadioButtonAction) = map(s) do s
+    get_label(s) == get_label(a) ? reducer(s, a) : s
 end
 
-reducer(s::Vector{State}, a::OnlySetThisOneToActive) = map(s) do s
-    get_label(s) === a.label ? State(s.label, true, s.is_triggered) : State(s.label, false, s.is_triggered)
+reducer(s::Vector{<:AbstractRadioButtonState}, a::OnlySetThisOneToActive) = map(s) do s
+    get_label(s) == get_label(a) ? State(s.label, true, s.is_triggered) : State(s.label, false, s.is_triggered)
 end
 
-reducer(s::Vector{State}, a::AddButton) =
-    State[s..., State(a.label, a.is_active, false)]
-reducer(s::Vector{State}, a::DeleteButton) = filter(s -> s.label !== a.label, s)
+reducer(s::Vector{<:AbstractRadioButtonState}, a::AddButton) =
+    [s..., State(a.label, a.is_active, false)]
+reducer(s::Vector{<:AbstractRadioButtonState}, a::DeleteButton) = 
+    filter(s -> get_label(s) !== get_label(a), s)
 
 
 # helper
@@ -108,17 +116,10 @@ Return `true` when triggered.
 """
 function RadioButton(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
-    is_triggered = CImGui.RadioButton(s.label, s.is_active)
-    dispatch!(store, SetTriggeredTo(s.label, is_triggered))
-    is_triggered && dispatch!(store, SetActiveTo(s.label, true))
+    is_triggered = CImGui.RadioButton(get_label(s), is_active(s))
+    dispatch!(store, SetTriggeredTo(get_label(s), is_triggered))
+    is_triggered && dispatch!(store, SetActiveTo(get_label(s), true))
     return is_triggered
 end
-
-get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
-get_label(s::State) = s.label
-
-is_active(s::State) = s.is_active
-is_triggered(s::State) = s.is_triggered
-
 
 end # module

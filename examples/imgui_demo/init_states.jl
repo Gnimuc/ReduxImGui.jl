@@ -189,3 +189,15 @@ const IMGUI_DEMO_LISTBOX_STATES = Dict(
         4,
     ),
 )
+
+const IMGUI_DEMO_MENU_STATES = Dict(
+    "demo_menus" => Menus.State(
+        "menus",
+        [
+            MenuItems.State("item1"),
+            MenuItems.State("item2", "Ctrl+A"),
+            MenuItems.State("item3", "", false),
+        ],
+        true,
+    ),
+)

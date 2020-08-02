@@ -6,6 +6,8 @@ using CImGui
 # actions
 abstract type AbstractButtonAction <: AbstractSyncAction end
 
+get_label(a::AbstractButtonAction) = a.label
+
 """
     Rename(label, new_label)
 Change button's label to `new_label`.
@@ -74,6 +76,8 @@ end
 # state
 abstract type AbstractButtonState <: AbstractImmutableState end
 
+get_label(s::AbstractButtonState) = s.label
+
 """
     Buttons.State(label::AbstractString)
     Buttons.State(label::AbstractString, size)
@@ -90,6 +94,9 @@ end
 State(label::AbstractString, size) = State(label, size, false)
 State(label::AbstractString) = State(label, (0,0))
 
+get_size(s::State) = s.size
+is_triggered(s::State) = s.is_triggered
+
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state
 reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
@@ -102,15 +109,13 @@ reducer(s::State, a::ChangeHeight) = State(s.label, (s.size[1], a.height), s.is_
 reducer(s::State, a::SetTriggeredTo) = State(s.label, s.size, a.is_triggered)
 
 reducer(s::Dict{String,<:AbstractButtonState}, a::AbstractButtonAction) =
-    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
+    Dict(k => (get_label(v) == get_label(a) ? reducer(v, a) : v) for (k, v) in s)
 
-reducer(s::Vector{State}, a::AbstractButtonAction) = map(s) do s
-    get_label(s) === a.label ? reducer(s, a) : s
+reducer(s::Vector{<:AbstractButtonState}, a::AbstractButtonAction) = map(s) do s
+    get_label(s) == get_label(a) ? reducer(s, a) : s
 end
-
-reducer(s::Vector{State}, a::AddButton) =
-    State[s..., State(a.label, a.size, false)]
-reducer(s::Vector{State}, a::DeleteButton) = filter(s -> s.label !== a.label, s)
+reducer(s::Vector{<:AbstractButtonState}, a::AddButton) = [s..., State(a.label, a.size, false)]
+reducer(s::Vector{<:AbstractButtonState}, a::DeleteButton) = filter(s -> get_label(s) !== get_label(a), s)
 
 # helper
 """
@@ -124,11 +129,5 @@ function Button(store::AbstractStore, get_state=Redux.get_state)
     dispatch!(store, SetTriggeredTo(s.label, is_triggered))
     return is_triggered
 end
-
-get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
-get_label(s::State) = s.label
-
-get_size(s::State) = s.size
-is_triggered(s::State) = s.is_triggered
 
 end # module

@@ -124,6 +124,11 @@ using .MenuItems
 import .MenuItems: MenuItem
 export MenuItems
 
+include("menus/MenuItemWithChecks.jl")
+using .MenuItemWithChecks
+import .MenuItemWithChecks: MenuItemWithCheck
+export MenuItemWithChecks
+
 include("menus/Menus.jl")
 using .Menus
 import .Menus: Menu

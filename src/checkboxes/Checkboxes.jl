@@ -110,7 +110,7 @@ reducer(s::Dict{String,<:AbstractCheckboxState}, a::AbstractCheckboxAction) =
     Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
 
 reducer(s::Vector{State}, a::AbstractCheckboxAction) = map(s) do s
-    get_label(s) === a.label ? reducer(s, a) : s
+    get_label(s) == a.label ? reducer(s, a) : s
 end
 
 reducer(s::Vector{State}, a::AddCheckbox) =

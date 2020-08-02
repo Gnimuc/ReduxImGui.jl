@@ -3,7 +3,7 @@ module ColorButtons
 using Redux
 using CImGui
 using ..Buttons
-import ..Buttons: AbstractButtonAction, AbstractButtonState
+import ..Buttons: AbstractButtonAction, AbstractButtonState, get_label
 import CImGui: ImVec4
 
 # actions
@@ -64,6 +64,8 @@ AddButton(label::AbstractString, size) = AddButton(
 )
 AddButton(label::AbstractString) = AddButton(label, (0, 0))
 
+get_label(a::AddButton) = a.button.label
+
 """
     DeleteButton(label::AbstractString)
 Delete the [`ColorButton`](@ref).
@@ -93,6 +95,13 @@ State(label::AbstractString, size) = State(
 )
 State(label::AbstractString) = State(label, (0, 0))
 
+get_label(s::State) = s.button.label
+get_size(s::State) = s.button.size
+get_color(s::State) = s.button_color
+get_hovered_color(s::State) = s.hovered_color
+get_active_color(s::State) = s.active_color
+is_triggered(s::State) = s.button.is_triggered
+
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state
 reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
@@ -105,15 +114,15 @@ reducer(s::State, a::SetHoveredColorTo) = State(s.button, s.button_color, a.colo
 reducer(s::State, a::SetActiveColorTo) = State(s.button, s.button_color, s.hovered_color, a.color)
 
 reducer(s::Dict{String,<:AbstractButtonState}, a::AbstractButtonAction) =
-    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
+    Dict(k => (get_label(v) == get_label(a) ? reducer(v, a) : v) for (k, v) in s)
 
-reducer(s::Vector{State}, a::AbstractButtonAction) = map(s) do s
-    get_label(s) === a.label ? reducer(s, a) : s
+reducer(s::Vector{<:AbstractButtonState}, a::AbstractButtonAction) = map(s) do s
+    get_label(s) == get_label(a) ? reducer(s, a) : s
 end
-
-reducer(s::Vector{State}, a::AddButton) =
-    State[s..., State(a.button, a.button_color, a.hovered_color, a.active_color)]
-reducer(s::Vector{State}, a::DeleteButton) = filter(s -> get_label(s) !== a.label, s)
+reducer(s::Vector{<:AbstractButtonState}, a::AddButton) =
+    [s..., State(a.button, a.button_color, a.hovered_color, a.active_color)]
+reducer(s::Vector{<:AbstractButtonState}, a::DeleteButton) = 
+    filter(s -> get_label(s) !== get_label(a), s)
 
 # helper
 """
@@ -130,14 +139,5 @@ function ColorButton(store::AbstractStore, get_state=Redux.get_state)
     dispatch!(store, Buttons.SetTriggeredTo(get_label(s), is_triggered))
     return is_triggered
 end
-
-get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
-get_label(s::State) = s.button.label
-
-get_size(s::State) = s.button.size
-get_color(s::State) = s.button_color
-get_hovered_color(s::State) = s.hovered_color
-get_active_color(s::State) = s.active_color
-is_triggered(s::State) = s.button.is_triggered
 
 end # module

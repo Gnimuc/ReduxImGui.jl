@@ -8,6 +8,8 @@ import ..RadioButtons: AbstractRadioButtonAction, AbstractRadioButtonState
 # actions
 abstract type AbstractRadioButtonGroupAction <: AbstractSyncAction end
 
+get_label(a::AbstractRadioButtonGroupAction) = a.label
+
 """
     Rename(label, new_label)
 Change radio button group's label to `new_label`.
@@ -51,6 +53,9 @@ struct State <: AbstractRadioButtonState
 end
 State(label::AbstractString, buttons = []) = State(label, buttons, false)
 
+get_label(s::State) = s.label
+is_triggered(s::State) = s.is_triggered
+
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state
 reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
@@ -62,7 +67,7 @@ reducer(s::State, a::EditButtons) =
     State(s.label, RadioButtons.reducer(s.buttons, a.action), s.is_triggered)
 
 reducer(s::Dict{String,<:AbstractRadioButtonState}, a::AbstractRadioButtonGroupAction) =
-    Dict(k => (get_label(v) == a.label ? reducer(v, a) : v) for (k, v) in s)
+    Dict(k => (get_label(v) == get_label(a) ? reducer(v, a) : v) for (k, v) in s)
 
 # helper
 """
@@ -86,11 +91,5 @@ function RadioButtonGroup(store::AbstractStore, get_state=Redux.get_state)
     is_triggered && dispatch!(store, SetTriggeredTo(s.label, is_triggered))
     return is_triggered
 end
-
-get_label(s) = "__REDUX_IMGUI_RESERVED_DUMMY_LABEL"
-get_label(s::State) = s.label
-
-is_triggered(s::State) = s.is_triggered
-
 
 end # module

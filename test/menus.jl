@@ -10,7 +10,6 @@ using Test
     # test initial state
     @test state.label == name
     @test state.shortcut == ""
-    @test state.is_selected == false
     @test state.is_enabled == true
     @test state.is_triggered == false
 
@@ -26,12 +25,6 @@ using Test
     state = get_state(store)
     dispatch!(store, MenuItems.ChangeShortcut(state.label, new_shortcut))
     @test MenuItems.get_shortcut(get_state(store)) == new_shortcut
-
-    dispatch!(store, MenuItems.SetSelectedTo(state.label, true))
-    @test MenuItems.is_selected(get_state(store)) == true
-
-    dispatch!(store, MenuItems.Toggle(state.label))
-    @test MenuItems.is_selected(get_state(store)) == false
 
     dispatch!(store, MenuItems.Enable(state.label))
     @test MenuItems.is_enabled(get_state(store)) == true
@@ -52,6 +45,62 @@ using Test
     @test state[2] == MenuItems.State("m3")
     dispatch!(store, MenuItems.SetTriggeredTo("m2", false))
     @test MenuItems.is_triggered(get_state(store)[1]) == false
+
+    # test dicts
+    store = create_store(MenuItems.reducer, Dict("m1"=>MenuItems.State("m1"),"m2"=>MenuItems.State("m2")))
+    state = get_state(store)
+    dispatch!(store, MenuItems.Enable("m2"))
+    state = get_state(store)
+    @test MenuItems.is_enabled(state["m2"]) == true
+end
+
+@testset "Menus | MenuItemWithCheck" begin
+    MIWC = MenuItemWithChecks
+    name = "MenuItem_test"
+    store = create_store(MIWC.reducer, MIWC.State(name))
+    state = get_state(store)
+
+    # test initial state
+    @test state.is_selected == false
+
+    # test actions
+    new_name = "MenuItem_new_name"
+    state = get_state(store)
+    dispatch!(store, MIWC.Rename(MIWC.get_label(state), new_name))
+    @test MIWC.get_label(get_state(store)) == new_name
+    dispatch!(store, MIWC.Rename(MIWC.get_label(state), name))
+    @test MIWC.get_label(get_state(store)) == name
+
+    new_shortcut = "Ctrl+Z"
+    state = get_state(store)
+    dispatch!(store, MIWC.ChangeShortcut(MIWC.get_label(state), new_shortcut))
+    @test MIWC.get_shortcut(get_state(store)) == new_shortcut
+
+    dispatch!(store, MIWC.SetSelectedTo(MIWC.get_label(state), true))
+    @test MIWC.is_selected(get_state(store)) == true
+
+    dispatch!(store, MIWC.Toggle(MIWC.get_label(state)))
+    @test MIWC.is_selected(get_state(store)) == false
+
+    dispatch!(store, MIWC.Enable(MIWC.get_label(state)))
+    @test MIWC.is_enabled(get_state(store)) == true
+
+    dispatch!(store, MIWC.Disable(MIWC.get_label(state)))
+    @test MIWC.is_enabled(get_state(store)) == false
+
+    dispatch!(store, MIWC.SetTriggeredTo(MIWC.get_label(state), true))
+    @test MIWC.is_triggered(get_state(store)) == true
+
+    # test vectors
+    store = create_store(MIWC.reducer, [MIWC.State("m1"),MIWC.State("m2")])
+    state = get_state(store) 
+    dispatch!(store, MIWC.AddMenuItem("m3"))
+    dispatch!(store, MIWC.DeleteMenuItem("m1"))
+    state = get_state(store)
+    @test state[1] == MIWC.State("m2")
+    @test state[2] == MIWC.State("m3")
+    dispatch!(store, MIWC.SetTriggeredTo("m2", false))
+    @test MIWC.is_triggered(get_state(store)[1]) == false
 
     # test dicts
     store = create_store(MenuItems.reducer, Dict("m1"=>MenuItems.State("m1"),"m2"=>MenuItems.State("m2")))
@@ -91,6 +140,9 @@ end
 
     dispatch!(store, Menus.EditMenuItems(state.label, MenuItems.AddMenuItem("mt")))
     @test get_state(store).items[1].label == "mt"
+
+    dispatch!(store, Menus.EditMenuItems(state.label, MenuItemWithChecks.AddMenuItem("mtc")))
+    @test Menus.get_label(get_state(store).items[2]) == "mtc"
 
     # test vectors
     store = create_store(Menus.reducer, [Menus.State("m1"),Menus.State("m2")])
