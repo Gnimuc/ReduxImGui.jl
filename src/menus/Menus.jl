@@ -5,6 +5,7 @@ using CImGui
 using ..MenuItems
 import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
 using ..ToggleMenuItems
+using ..MenuItemSeparators
 
 # actions
 abstract type AbstractMenuAction <: AbstractMenuItemAction end
@@ -136,14 +137,21 @@ function Menu(store::AbstractStore, get_state=Redux.get_state)
     is_activated = CImGui.BeginMenu(s.label, s.is_enabled)
     dispatch!(store, SetTriggeredTo(s.label, is_activated))
     !is_activated && return false
-    for item in s.items
-        if item isa ToggleMenuItems.State
+    for (i, item) in enumerate(s.items)
+        if item isa MenuItems.State 
+            x = CImGui.MenuItem(item.label, item.shortcut, false, item.is_enabled)
+            dispatch!(store, MenuItems.SetTriggeredTo(item.label, x))
+        elseif item isa ToggleMenuItems.State
             x = CImGui.MenuItem(item.label, item.shortcut, item.is_selected, item.is_enabled)
             x && dispatch!(store, ToggleMenuItems.Toggle(item.label))
+            dispatch!(store, MenuItems.SetTriggeredTo(item.label, x))
+        elseif item isa MenuItemSeparators.State
+            CImGui.Separator()
+        elseif item isa Menus.State
+            Menu(store, s->get_state(s).items[i])
         else
-            x = CImGui.MenuItem(item.label, item.shortcut, false, item.is_enabled)
+            CImGui.Text("item type not supported")
         end
-        dispatch!(store, MenuItems.SetTriggeredTo(item.label, x))
     end
     CImGui.EndMenu()
     return true

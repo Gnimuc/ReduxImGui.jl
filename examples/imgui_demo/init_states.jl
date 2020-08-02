@@ -190,13 +190,62 @@ const IMGUI_DEMO_LISTBOX_STATES = Dict(
     ),
 )
 
+const IMGUI_DEMO_MENU_OPEN_RESENT_STATES = Menus.State(
+    "Open Recent",
+    [
+        MenuItems.State("fish_hat.c"),
+        MenuItems.State("fish_hat.inl"),
+        MenuItems.State("fish_hat.h"),
+        Menus.State(
+            "More..",
+            [
+                MenuItems.State("Hello"),
+                MenuItems.State("Sailor"),
+                Menus.State("Recurse..", [], false)
+            ],
+            true,
+        )
+    ],
+    true,
+)
+
+const IMGUI_DEMO_MENU_FILE_STATES = [
+    "File",
+    [
+        MenuItems.State("(dummy menu)", "", false),
+        MenuItems.State("New"),
+        MenuItems.State("Open", "Ctrl+O"),
+        MenuItemSeparators.State(),
+        MenuItems.State("Copy", "CTRL+C"),
+        MenuItems.State("Paste", "CTRL+V"),
+    ],
+    true,
+]
+
+const IMGUI_DEMO_MENU_EDIT_STATES = [
+    "Edit",
+    [
+        MenuItems.State("Undo", "CTRL+Z"),
+        MenuItems.State("Redo", "CTRL+Y", false),
+        MenuItemSeparators.State(),
+        MenuItems.State("Cut", "CTRL+X"),
+        MenuItems.State("Copy", "CTRL+C"),
+        MenuItems.State("Paste", "CTRL+V"),
+    ],
+    true,
+]
+
 const IMGUI_DEMO_MENU_STATES = Dict(
     "demo_menus" => Menus.State(
         "menus",
         [
-            MenuItems.State("item1"),
-            MenuItems.State("item2", "Ctrl+A"),
-            MenuItems.State("item3", "", false),
+            MenuItems.State("(dummy menu)", "", false),
+            MenuItems.State("New"),
+            MenuItems.State("Open", "Ctrl+O"),
+            MenuItemSeparators.State(),
+            MenuItems.State("Copy", "CTRL+C"),
+            MenuItems.State("Paste", "CTRL+V"),
+            IMGUI_DEMO_MENU_OPEN_RESENT_STATES,
         ],
         true,
     ),
