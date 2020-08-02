@@ -4,7 +4,7 @@ using Redux
 using CImGui
 using ..MenuItems
 import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
-using ..MenuItemWithChecks
+using ..ToggleMenuItems
 
 # actions
 abstract type AbstractMenuAction <: AbstractSyncAction end
@@ -34,7 +34,7 @@ end
     EditMenuItems(label, action::AbstractMenuItemAction)
 Edit manu items.
 """
-struct EditMenuItems{T<:AbstractSyncAction} <: AbstractMenuAction
+struct EditMenuItems{T<:AbstractMenuItemAction} <: AbstractMenuAction
     label::String
     action::T
 end
@@ -108,7 +108,7 @@ reducer(s::State, a::SetTriggeredTo) = State(s.label, s.items, s.is_enabled, a.i
 
 function reducer(s::State, a::EditMenuItems)
     new_items = MenuItems.reducer(s.items, a.action)
-    new_items = MenuItemWithChecks.reducer(new_items, a.action)
+    new_items = ToggleMenuItems.reducer(new_items, a.action)
     State(s.label, new_items, s.is_enabled, s.is_triggered)
 end
 
@@ -135,7 +135,7 @@ function Menu(store::AbstractStore, get_state=Redux.get_state)
     for item in s.items
         if MenuItems.has_is_selected(item)
             x = CImGui.MenuItem(item.label, item.shortcut, item.is_selected, item.is_enabled)
-            x && dispatch!(store, MenuItemWithChecks.Toggle(item.label))
+            x && dispatch!(store, ToggleMenuItems.Toggle(item.label))
         else
             x = CImGui.MenuItem(item.label, item.shortcut, false, item.is_enabled)
         end

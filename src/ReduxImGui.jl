@@ -124,10 +124,10 @@ using .MenuItems
 import .MenuItems: MenuItem
 export MenuItems
 
-include("menus/MenuItemWithChecks.jl")
-using .MenuItemWithChecks
-import .MenuItemWithChecks: MenuItemWithCheck
-export MenuItemWithChecks
+include("menus/ToggleMenuItems.jl")
+using .ToggleMenuItems
+import .ToggleMenuItems: ToggleMenuItem
+export ToggleMenuItems
 
 include("menus/Menus.jl")
 using .Menus

@@ -54,8 +54,8 @@ using Test
     @test MenuItems.is_enabled(state["m2"]) == true
 end
 
-@testset "Menus | MenuItemWithCheck" begin
-    MIWC = MenuItemWithChecks
+@testset "Menus | ToggleMenuItem" begin
+    MIWC = ToggleMenuItems
     name = "MenuItem_test"
     store = create_store(MIWC.reducer, MIWC.State(name))
     state = get_state(store)
@@ -103,11 +103,11 @@ end
     @test MIWC.is_triggered(get_state(store)[1]) == false
 
     # test dicts
-    store = create_store(MenuItems.reducer, Dict("m1"=>MenuItems.State("m1"),"m2"=>MenuItems.State("m2")))
+    store = create_store(MIWC.reducer, Dict("m1"=>MIWC.State("m1"),"m2"=>MIWC.State("m2")))
     state = get_state(store)
-    dispatch!(store, MenuItems.Enable("m2"))
+    dispatch!(store, MIWC.Enable("m2"))
     state = get_state(store)
-    @test MenuItems.is_enabled(state["m2"]) == true
+    @test MIWC.is_enabled(state["m2"]) == true
 end
 
 @testset "Menus | Menus" begin
@@ -141,7 +141,7 @@ end
     dispatch!(store, Menus.EditMenuItems(state.label, MenuItems.AddMenuItem("mt")))
     @test get_state(store).items[1].label == "mt"
 
-    dispatch!(store, Menus.EditMenuItems(state.label, MenuItemWithChecks.AddMenuItem("mtc")))
+    dispatch!(store, Menus.EditMenuItems(state.label, ToggleMenuItems.AddMenuItem("mtc")))
     @test Menus.get_label(get_state(store).items[2]) == "mtc"
 
     # test vectors

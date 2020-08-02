@@ -1,4 +1,4 @@
-module MenuItemWithChecks
+module ToggleMenuItems
 
 using Redux
 using CImGui
@@ -52,8 +52,8 @@ end
 
 # state
 """
-    MenuItemWithChecks.State(label::AbstractString, shortcut::AbstractString = "", is_selected = false, is_enabled = true)
-A manu item with a check state.
+    ToggleMenuItems.State(label::AbstractString, shortcut::AbstractString = "", is_selected = false, is_enabled = true)
+A manu item with a toggle state.
 """
 struct State <: AbstractMenuItemState
     menu_item::MenuItems.State
@@ -90,11 +90,11 @@ reducer(s::Vector{<:AbstractMenuItemState}, a::DeleteMenuItem) = filter(s -> get
 
 # helper
 """
-    MenuItemWithCheck(store::AbstractStore, get_state=Redux.get_state) -> Bool
+    ToggleMenuItem(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when triggered/activated.
 `get_state` is a router function which tells how to find the target state from `store`.
 """
-function MenuItemWithCheck(store::AbstractStore, get_state=Redux.get_state)
+function ToggleMenuItem(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
     is_activated = CImGui.MenuItem(get_label(s), get_shortcut(s), s.is_selected, is_enabled(s))
     dispatch!(store, MenuItems.SetTriggeredTo(get_label(s), is_activated))
