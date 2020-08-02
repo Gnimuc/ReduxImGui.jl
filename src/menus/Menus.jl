@@ -7,7 +7,7 @@ import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
 using ..ToggleMenuItems
 
 # actions
-abstract type AbstractMenuAction <: AbstractSyncAction end
+abstract type AbstractMenuAction <: AbstractMenuItemAction end
 
 get_label(a::AbstractMenuAction) = a.label
 
@@ -110,6 +110,9 @@ reducer(s::State, a::SetTriggeredTo) = State(s.label, s.items, s.is_enabled, a.i
 function reducer(s::State, a::EditMenuItems)
     new_items = MenuItems.reducer(s.items, a.action)
     new_items = ToggleMenuItems.reducer(new_items, a.action)
+    new_items = map(new_items) do item
+        item isa Menus.State ? Menus.reducer(item, a.action) : item
+    end
     State(s.label, new_items, s.is_enabled, s.is_triggered)
 end
 

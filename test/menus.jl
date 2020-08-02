@@ -144,6 +144,25 @@ end
     dispatch!(store, Menus.EditMenuItems(state.label, ToggleMenuItems.AddMenuItem("mtc")))
     @test Menus.get_label(get_state(store).items[2]) == "mtc"
 
+    # submenu
+    name = "SubMenu_test"
+    store = create_store(Menus.reducer, Menus.State(name, [MenuItems.State("item1"), Menus.State("submenu1")]))
+    state = get_state(store)
+    dispatch!(store, Menus.EditMenuItems(state.label, ToggleMenuItems.AddMenuItem("item2")))
+    @test Menus.get_label(get_state(store).items[3]) == "item2"
+
+    dispatch!(
+        store, 
+        Menus.EditMenuItems(
+            state.label, 
+            Menus.EditMenuItems(
+                "submenu1", 
+                ToggleMenuItems.AddMenuItem("item2")
+            )
+        )
+    )
+    @test Menus.get_label(get_state(store).items[2].items[]) == "item2"
+
     # test vectors
     store = create_store(Menus.reducer, [Menus.State("m1"),Menus.State("m2")])
     state = get_state(store) 
