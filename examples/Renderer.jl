@@ -1,5 +1,7 @@
 module Renderer
 
+Base.Experimental.@optlevel 1
+
 using CImGui
 using CImGui.GLFWBackend
 using CImGui.OpenGLBackend

@@ -1,5 +1,7 @@
 module AppDemo
 
+Base.Experimental.@optlevel 1
+
 using ReduxImGui
 using ReduxImGui.Redux
 using ReduxImGui.CImGui

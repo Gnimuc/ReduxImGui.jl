@@ -1,5 +1,7 @@
 module InputTextWithHints
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 using ..InputTexts

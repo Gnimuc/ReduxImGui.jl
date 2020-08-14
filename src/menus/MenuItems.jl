@@ -1,5 +1,7 @@
 module MenuItems
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 

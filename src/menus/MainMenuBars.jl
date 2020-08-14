@@ -1,5 +1,7 @@
 module MainMenuBars
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 

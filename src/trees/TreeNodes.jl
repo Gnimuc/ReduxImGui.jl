@@ -1,5 +1,7 @@
 module TreeNodes
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 

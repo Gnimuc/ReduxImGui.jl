@@ -1,5 +1,7 @@
 module ListBoxes
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 import ..ReduxImGui: get_label

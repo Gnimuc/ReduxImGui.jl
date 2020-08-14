@@ -1,5 +1,7 @@
 module RadioButtonGroups
 
+Base.Experimental.@optlevel 1
+
 using Redux
 using CImGui
 using ..RadioButtons
