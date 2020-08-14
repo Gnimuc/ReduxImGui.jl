@@ -120,35 +120,7 @@ using .ListBoxes
 import .ListBoxes: ListBox, get_items, get_item
 export ListBoxes
 
-## Menus
-include("menus/MenuItems.jl")
-using .MenuItems
-import .MenuItems: MenuItem
-export MenuItems
-
-include("menus/ToggleMenuItems.jl")
-using .ToggleMenuItems
-import .ToggleMenuItems: ToggleMenuItem
-export ToggleMenuItems
-
-include("menus/MenuItemSeparators.jl")
-using .MenuItemSeparators
-export MenuItemSeparators
-
-include("menus/Menus.jl")
-using .Menus
-import .Menus: Menu
-export Menus
-
-include("menus/MenuBars.jl")
-using .MenuBars
-import .MenuBars: MenuBar
-export MenuBars
-
-include("menus/MainMenuBars.jl")
-using .MainMenuBars
-import .MainMenuBars: MainMenuBar
-export MainMenuBars
+include("menus/includes.jl")
 
 ## Others
 include("trees/TreeNodes.jl")

@@ -9,7 +9,7 @@ using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
 using ReduxImGui.RadioButtonGroups: AbstractRadioButtonGroupAction
 using ReduxImGui.Checkboxes: AbstractCheckboxAction
 using ReduxImGui.Menus: AbstractMenuState, AbstractMenuAction
-
+using ReduxImGui.MainMenuBars: AbstractMainMenuBarState, AbstractMainMenuBarAction
 
 # additional widgets
 include("../widgets/Repeaters.jl")
@@ -19,9 +19,9 @@ include("../utils.jl")
 
 # UIs
 include("ui/buttons.jl")
-include("ui/checkbox.jl")
-include("ui/combo.jl")
-include("ui/repeater.jl")
+include("ui/checkboxes.jl")
+include("ui/combos.jl")
+include("ui/repeaters.jl")
 include("ui/inputs.jl")
 include("ui/drags.jl")
 include("ui/sliders.jl")
@@ -52,11 +52,21 @@ struct State <: AbstractImmutableState
     slider_strings::Dict{String,SliderStrings.State}
     color_edits::Dict{String,ColorEdits.State}
     listboxes::Dict{String,ListBoxes.State}
-    menus::Dict{String,Menus.State}
+    main_menubar::MainMenuBars.State
+    extra::Dict{String,Bool}
 end
 
-# constants
-include("init_states.jl")
+# initial states
+include("init/buttons.jl")
+include("init/checkboxes.jl")
+include("init/combos.jl")
+include("init/repeaters.jl")
+include("init/inputs.jl")
+include("init/drags.jl")
+include("init/sliders.jl")
+include("init/colors.jl")
+include("init/listboxes.jl")
+include("init/menus.jl")
 
 const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_BUTTON_STATES,
@@ -78,7 +88,10 @@ const IMGUI_DEMO_STATE = AppDemo.State(
     IMGUI_DEMO_SLIDER_STRING_STATES,
     IMGUI_DEMO_COLOR_EDIT_STATES,
     IMGUI_DEMO_LISTBOX_STATES,
-    IMGUI_DEMO_MENU_STATES,
+    IMGUI_DEMO_MAIN_MENUBAR_STATES,
+    Dict(
+        "show_app_main_manu_bar"=>true,
+    )
 )
 
 # reducers
@@ -105,44 +118,32 @@ reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction) =
 reducer(state::Dict{String,Menus.State}, action::AbstractMenuAction) =
     Menus.reducer(state, action)
 
-function reducer(state::State, action::AbstractAction)
-    next_repeater_state = Repeaters.repeater(state.repeaters, action)
-    next_combo_state = Combos.combo(state.combos, action)
-    next_input_text_state = InputTexts.input_text(state.input_texts, action)
-    next_input_text_with_hint_state = InputTextWithHints.input_text_with_hint(state.input_text_with_hints, action)
-    next_input_int_state = InputInts.input_int(state.input_ints, action)
-    next_input_float_state = InputFloats.input_float(state.input_floats, action)
-    next_input_double_state = InputDoubles.input_double(state.input_doubles, action)
-    next_drag_int_state = DragInts.drag_int(state.drag_ints, action)
-    next_drag_float_state = DragFloats.drag_float(state.drag_floats, action)
-    next_slider_int_state = SliderInts.slider_int(state.slider_ints, action)
-    next_slider_float_state = SliderFloats.slider_float(state.slider_floats, action)
-    next_slider_angle_state = SliderAngles.slider_angle(state.slider_angles, action)
-    next_slider_string_state = SliderStrings.slider_string(state.slider_strings, action)
-    next_color_edit_state = ColorEdits.color_edit(state.color_edits, action)
-    next_listbox_state = ListBoxes.listbox(state.listboxes, action)
-    return State(reducer(state.buttons, action),
-                 reducer(state.checkboxes, action),
-                 reducer(state.radio_button_group, action),
-                 reducer(state.colorful_buttons, action),
-                 next_repeater_state,
-                 next_combo_state,
-                 next_input_text_state,
-                 next_input_text_with_hint_state,
-                 next_input_int_state,
-                 next_input_float_state,
-                 next_input_double_state,
-                 next_drag_int_state,
-                 next_drag_float_state,
-                 next_slider_int_state,
-                 next_slider_float_state,
-                 next_slider_angle_state,
-                 next_slider_string_state,
-                 next_color_edit_state,
-                 next_listbox_state,
-                 reducer(state.menus, action),
-                )
-end
+reducer(state::MainMenuBars.State, action::AbstractMainMenuBarAction) =
+    MainMenuBars.reducer(state, action)
+
+reducer(state::State, action::AbstractAction) =
+    State(reducer(state.buttons, action),
+          reducer(state.checkboxes, action),
+          reducer(state.radio_button_group, action),
+          reducer(state.colorful_buttons, action),
+          Repeaters.repeater(state.repeaters, action),
+          Combos.combo(state.combos, action),
+          InputTexts.input_text(state.input_texts, action),
+          InputTextWithHints.input_text_with_hint(state.input_text_with_hints, action),
+          InputInts.input_int(state.input_ints, action),
+          InputFloats.input_float(state.input_floats, action),
+          InputDoubles.input_double(state.input_doubles, action),
+          DragInts.drag_int(state.drag_ints, action),
+          DragFloats.drag_float(state.drag_floats, action),
+          SliderInts.slider_int(state.slider_ints, action),
+          SliderFloats.slider_float(state.slider_floats, action),
+          SliderAngles.slider_angle(state.slider_angles, action),
+          SliderStrings.slider_string(state.slider_strings, action),
+          ColorEdits.color_edit(state.color_edits, action),
+          ListBoxes.listbox(state.listboxes, action),
+          reducer(state.main_menubar, action),
+          state.extra,
+    )
 
 # helper
 """
@@ -153,6 +154,10 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
     CImGui.SetNextWindowPos((650, 20), CImGui.ImGuiCond_FirstUseEver)
     CImGui.SetNextWindowSize((550, 680), CImGui.ImGuiCond_FirstUseEver)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)
+    
+    get_state(store).extra["show_app_main_manu_bar"] && 
+        ReduxImGui.MainMenuBar(store, s->get_state(s).main_menubar)
+
     ReduxImGui.TreeNode("Basic") do
         basic_button(store, get_state)
         basic_checkbox(store, get_state)
@@ -185,9 +190,6 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
         naive_color_edits(store, get_state)
         naive_listboxes(store, get_state)
 
-        if ReduxImGui.Menu(store, s->get_state(s).menus["demo_menus"])
-            @info "This triggers $(@__FILE__):$(@__LINE__)."
-        end
     end
 
     ReduxImGui.TreeNode("Trees") do

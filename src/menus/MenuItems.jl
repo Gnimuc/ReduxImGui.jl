@@ -75,8 +75,10 @@ end
 
 # state
 abstract type AbstractMenuItemState <: AbstractImmutableState end
+abstract type AbstractFakeMenuItem <: AbstractMenuItemState end
 
 get_label(s::AbstractMenuItemState) = s.label
+get_label(s::AbstractFakeMenuItem) = "___REDUXIMGUI_RESERVED_DUMMY_LABEL"
 
 """
     MenuItems.State(label::AbstractString, shortcut = "", is_enabled = true)

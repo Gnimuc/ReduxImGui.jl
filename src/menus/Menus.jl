@@ -7,7 +7,6 @@ using CImGui
 using ..MenuItems
 import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
 using ..ToggleMenuItems
-using ..MenuItemSeparators
 
 # actions
 abstract type AbstractMenuAction <: AbstractMenuItemAction end
@@ -133,6 +132,12 @@ reducer(s::Vector{<:AbstractMenuState}, a::DeleteMenu) = filter(s -> s.label !==
     Menu(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when triggered/activated.
 `get_state` is a router function which tells how to find the target state from `store`.
+
+To render anything as an MenuItem, you could use functors, for example,
+```
+struct ItemSeparator <: AbstractMenuItemState end
+(x::ItemSeparator)() = CImGui.Separator()
+```
 """
 function Menu(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
@@ -151,6 +156,8 @@ function Menu(store::AbstractStore, get_state=Redux.get_state)
             CImGui.Separator()
         elseif item isa Menus.State
             Menu(store, s->get_state(s).items[i])
+        elseif item isa AbstractMenuItemState
+            item()
         else
             CImGui.Text("item type not supported")
         end

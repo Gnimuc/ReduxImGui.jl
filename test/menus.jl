@@ -2,6 +2,9 @@ using ReduxImGui
 using ReduxImGui.Redux
 using Test
 
+struct ItemSeparator <: MenuItems.AbstractFakeMenuItem end
+(x::ItemSeparator)() = ReduxImGui.CImGui.Separator()
+
 @testset "Menus | MenuItem" begin
     name = "MenuItem_test"
     store = create_store(MenuItems.reducer, MenuItems.State(name))
@@ -36,7 +39,7 @@ using Test
     @test MenuItems.is_triggered(get_state(store)) == true
 
     # test vectors
-    store = create_store(MenuItems.reducer, [MenuItems.State("m1"),MenuItems.State("m2"),MenuItemSeparators.State()])
+    store = create_store(MenuItems.reducer, [MenuItems.State("m1"),MenuItems.State("m2"),ItemSeparator()])
     state = get_state(store) 
     dispatch!(store, MenuItems.AddMenuItem("m3"))
     dispatch!(store, MenuItems.DeleteMenuItem("m1"))
