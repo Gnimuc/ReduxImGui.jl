@@ -69,7 +69,7 @@ the latest poll events.
 """
 struct State <: AbstractMenuBarState
     label::String
-    menus::Vector{Menus.State}
+    menus::Vector{Menu}
     is_hidden::Bool
     is_triggered::Bool
 end
@@ -97,7 +97,7 @@ reducer(s::State, a::EditMenus) =
 """
     MenuBar(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when `ImGuiWindowFlags_MenuBar` is setted on the parent window.
-`get_state` is a router function which tells how to find the target state from `store`.
+`get_state` is a router function that tells how to find the target state from `store`. `chain_action` is for chaining upstream actions.
 """
 function MenuBar(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)

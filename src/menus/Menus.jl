@@ -5,13 +5,35 @@ Base.Experimental.@optlevel 1
 using Redux
 using CImGui
 using ..MenuItems
-import ..MenuItems: AbstractMenuItemAction, AbstractMenuItemState, get_label
+import ..MenuItems: AbstractMenuItemAction, AbstractGenericMenuItem, AbstractMenuItem
 using ..ToggleMenuItems
+import ..ToggleMenuItems: ToggleMenuItem
 
-# actions
-abstract type AbstractMenuAction <: AbstractMenuItemAction end
+## actions
+"""
+    AbstractGenericMenuAction <: AbstractSyncAction
+Abstract supertype for all kinds of menu actions. Literally, its subtype could be anything.
+"""
+abstract type AbstractGenericMenuAction <: AbstractSyncAction end
 
-get_label(a::AbstractMenuAction) = a.label
+"""
+    AbstractMenuAction <: AbstractGenericMenuAction
+Abstract supertype for all menu actions. Any subtypes of this type should has a 
+`label` field or at least `x.label` should work.
+"""
+abstract type AbstractMenuAction <: AbstractGenericMenuAction end
+
+# for determining whether we should apply the reducer function to certain action types. 
+struct Valid end
+struct Invalid end
+
+is_valid(a::AbstractSyncAction) = Invalid
+is_valid(a::AbstractGenericMenuAction) = Invalid
+is_valid(a::AbstractMenuAction) = Valid  
+
+_get_label(a::AbstractSyncAction, ::Type{Invalid}) = "___REDUXIMGUI_RESERVED_DUMMY_ACTION_LABEL"
+_get_label(a::AbstractSyncAction, ::Type{Valid}) = a.label
+get_label(a::AbstractSyncAction) = _get_label(a, is_valid(a))
 
 """
     Rename(label, new_label)
@@ -33,10 +55,10 @@ struct SetTriggeredTo <: AbstractMenuAction
 end
 
 """
-    EditMenuItems(label, action::AbstractMenuItemAction)
+    EditMenuItems(label, action::AbstractSyncAction)
 Edit manu items.
 """
-struct EditMenuItems{T<:AbstractMenuItemAction} <: AbstractMenuAction
+struct EditMenuItems{T<:AbstractSyncAction} <: AbstractMenuAction
     label::String
     action::T
 end
@@ -63,7 +85,7 @@ Add a [`Menu`](@ref).
 """
 struct AddMenu <: AbstractMenuAction
     label::String
-    items::Vector{MenuItems.State}
+    items::Vector{AbstractImmutableState}
     is_enabled::Bool
 end
 AddMenu(label::AbstractString, items = []) = AddMenu(label, items, true)
@@ -76,70 +98,91 @@ struct DeleteMenu <: AbstractMenuAction
     label::String
 end
 
-# state
-# note the menu itself could be a menu item of another menu
-abstract type AbstractMenuState <: AbstractMenuItemState end 
+## state
+"""
+    AbstractGenericMenu <: AbstractImmutableState
+Abstract supertype for all kinds of menus. Literally, its subtype could be anything.
+"""
+abstract type AbstractGenericMenu <: AbstractImmutableState end
 
 """
-    Menus.State(label::AbstractString, items = [], is_enabled = true)
+    AbstractMenu <: AbstractGenericMenu
+Abstract supertype for all menus. Any subtypes of this type should has a 
+`label` field or at least `x.label` should work.
+"""
+abstract type AbstractMenu <: AbstractGenericMenu end
+
+is_valid(s::AbstractImmutableState) = Invalid
+is_valid(s::AbstractGenericMenu) = Invalid
+is_valid(s::AbstractMenu) = Valid
+
+_get_label(s::AbstractImmutableState, ::Type{Invalid}) = "___REDUXIMGUI_RESERVED_DUMMY_STATE_LABEL"
+_get_label(s::AbstractImmutableState, ::Type{Valid}) = s.label
+get_label(s::AbstractImmutableState) = _get_label(s, is_valid(s))
+
+
+"""
+    Menu(label::AbstractString, items = [], is_enabled = true)
 A menu state which contains a label a.k.a the identifier, a list of menu items, 
 a flag value `is_enabled` and a flag value `is_triggered` that records the state of
 the latest poll events.
 """
-struct State <: AbstractMenuState
+struct Menu <: AbstractMenu
     label::String
-    items::Vector{MenuItems.AbstractMenuItemState}
+    items::Vector{AbstractImmutableState}
     is_enabled::Bool
     is_triggered::Bool
 end
-State(label::AbstractString, items = [], is_enabled = true) = 
-    State(label, items, is_enabled, false)
+Menu(label::AbstractString, items = [], is_enabled = true) = 
+    Menu(label, items, is_enabled, false)
 
-get_label(s::State) = s.label
-is_enabled(s::State) = s.is_enabled
-is_triggered(s::State) = s.is_triggered
+is_enabled(s::Menu) = s.is_enabled
+is_triggered(s::Menu) = s.is_triggered
 
 # reducers
 reducer(state::AbstractState, action::AbstractAction) = state
 reducer(state::Vector{<:AbstractState}, action::AbstractAction) = state
 reducer(state::Dict{String,<:AbstractState}, action::AbstractAction) = state
 
-reducer(s::State, a::Rename) = State(a.new_label, s.items, s.is_enabled, s.is_triggered)
-reducer(s::State, a::Enable) = State(s.label, s.items, true, s.is_triggered)
-reducer(s::State, a::Disable) = State(s.label, s.items, false, s.is_triggered)
-reducer(s::State, a::SetTriggeredTo) = State(s.label, s.items, s.is_enabled, a.is_triggered)
+reducer(s::Menu, a::Rename) = Menu(a.new_label, s.items, s.is_enabled, s.is_triggered)
+reducer(s::Menu, a::Enable) = Menu(s.label, s.items, true, s.is_triggered)
+reducer(s::Menu, a::Disable) = Menu(s.label, s.items, false, s.is_triggered)
+reducer(s::Menu, a::SetTriggeredTo) = Menu(s.label, s.items, s.is_enabled, a.is_triggered)
 
-function reducer(s::State, a::EditMenuItems)
+function reducer(s::Menu, a::EditMenuItems)
     new_items = MenuItems.reducer(s.items, a.action)
     new_items = ToggleMenuItems.reducer(new_items, a.action)
     new_items = map(new_items) do item
-        item isa Menus.State ? Menus.reducer(item, a.action) : item
+        item isa Menu ? Menus.reducer(item, a.action) : item
     end
-    State(s.label, new_items, s.is_enabled, s.is_triggered)
+    Menu(s.label, new_items, s.is_enabled, s.is_triggered)
 end
 
-reducer(s::Dict{String,<:AbstractMenuState}, a::AbstractMenuAction) =
+reducer(s::Dict{String,<:AbstractImmutableState}, a::AbstractMenuAction) =
     Dict(k => (get_label(v) == get_label(a) ? reducer(v, a) : v) for (k, v) in s)
 
-reducer(s::Vector{<:AbstractMenuState}, a::AbstractMenuAction) = map(s) do s
+reducer(s::Vector{<:AbstractImmutableState}, a::AbstractMenuAction) = map(s) do s
     get_label(s) == get_label(a) ? reducer(s, a) : s
 end
-reducer(s::Vector{<:AbstractMenuState}, a::AddMenu) = [s..., State(a.label, a.items, a.is_enabled, false)]
-reducer(s::Vector{<:AbstractMenuState}, a::DeleteMenu) = filter(s -> s.label !== get_label(a), s)
+reducer(s::Vector{<:AbstractImmutableState}, a::AddMenu) = 
+    [s..., Menu(a.label, a.items, a.is_enabled, false)]
+reducer(s::Vector{<:AbstractImmutableState}, a::DeleteMenu) = 
+    filter(s -> s.label !== get_label(a), s)
 
-# helper
+# UI
 """
-    Menu(store::AbstractStore, get_state=Redux.get_state) -> Bool
+    (::Menu)(store::AbstractStore, get_state=Redux.get_state, chain_action=identity) -> Bool
 Return `true` when triggered/activated.
-`get_state` is a router function which tells how to find the target state from `store`.
+`get_state` is a router function that tells how to find the target state from `store`. 
+`chain_action` is for chaining upstream actions.
 
 To render anything as an MenuItem, you could use functors, for example,
 ```
-struct ItemSeparator <: AbstractMenuItemState end
+struct ItemSeparator <: AbstractGenericMenuItem end
 (x::ItemSeparator)() = CImGui.Separator()
 ```
 """
-function Menu(store::AbstractStore, get_state=Redux.get_state, chain_action=identity)
+function (::Menu)(store::AbstractStore, get_state=Redux.get_state, chain_action=identity)
     s = get_state(store)
     is_activated = CImGui.BeginMenu(s.label, s.is_enabled)
     dispatch!(
@@ -148,40 +191,20 @@ function Menu(store::AbstractStore, get_state=Redux.get_state, chain_action=iden
     )
     !is_activated && return false
     for (i, item) in enumerate(s.items)
-        if item isa MenuItems.State 
-            MenuItems.MenuItem(
+        if item isa Union{AbstractMenuItem, AbstractMenu}
+            item(
                 store, 
                 x->get_state(x).items[i], 
                 x->EditMenuItems(s.label, x) |> chain_action,
             )
-        elseif item isa ToggleMenuItems.State
-            ToggleMenuItems.ToggleMenuItem(
-                store, 
-                x->get_state(x).items[i], 
-                x->EditMenuItems(s.label, x) |> chain_action,
-            )
-        elseif item isa Menus.State
-            Menu(store, s->get_state(s).items[i])
-        elseif item isa AbstractMenuItemState
+        elseif item isa Union{AbstractGenericMenuItem, AbstractGenericMenu}
             item()
         else
-            CImGui.Text("item type not supported")
+            CImGui.Text("menu item type not supported! skip rendering...")
         end
     end
     CImGui.EndMenu()
     return true
-end
-
-"""
-    Menu(f::Function, label::AbstractString, enabled=true) -> Bool
-Create a sub-menu entry.
-"""
-function Menu(f::Function, label::AbstractString, enabled=true)
-    if CImGui.BeginMenu(label, enabled)
-        f()
-        CImGui.EndMenu()
-    end
-    return nothing
 end
 
 end # module

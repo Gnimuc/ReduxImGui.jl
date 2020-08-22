@@ -8,8 +8,8 @@ using ReduxImGui.CImGui
 using ReduxImGui.Buttons: AbstractButtonState, AbstractButtonAction
 using ReduxImGui.RadioButtonGroups: AbstractRadioButtonGroupAction
 using ReduxImGui.Checkboxes: AbstractCheckboxAction
-using ReduxImGui.Menus: AbstractMenuState, AbstractMenuAction
-using ReduxImGui.MainMenuBars: AbstractMainMenuBarState, AbstractMainMenuBarAction
+using ReduxImGui.Menus: AbstractMenu, AbstractMenuAction
+using ReduxImGui.MainMenuBars: AbstractMainMenuBar, AbstractMainMenuBarAction
 
 # additional widgets
 include("../widgets/Repeaters.jl")
@@ -52,7 +52,7 @@ struct State <: AbstractImmutableState
     slider_strings::Dict{String,SliderStrings.State}
     color_edits::Dict{String,ColorEdits.State}
     listboxes::Dict{String,ListBoxes.State}
-    main_menubar::MainMenuBars.State
+    main_menubar::MainMenuBar
     extra::Dict{String,Bool}
 end
 
@@ -115,10 +115,10 @@ reducer(state::RadioButtonGroups.State, action::AbstractRadioButtonGroupAction) 
 reducer(state::Vector{ColorButtons.State}, action::AbstractButtonAction) =
     ColorButtons.reducer(state, action)
 
-reducer(state::Dict{String,Menus.State}, action::AbstractMenuAction) =
+reducer(state::Dict{String,Menu}, action::AbstractMenuAction) =
     Menus.reducer(state, action)
 
-reducer(state::MainMenuBars.State, action::AbstractMainMenuBarAction) =
+reducer(state::MainMenuBar, action::AbstractMainMenuBarAction) =
     MainMenuBars.reducer(state, action)
 
 reducer(state::State, action::AbstractAction) =
@@ -156,7 +156,7 @@ function ImGui_Demo(store::AbstractStore, get_state=Redux.get_state)
     CImGui.Begin("Demo", Ref(true), CImGui.ImGuiWindowFlags_NoSavedSettings)
     
     get_state(store).extra["show_app_main_manu_bar"] && 
-        ReduxImGui.MainMenuBar(store, s->get_state(s).main_menubar)
+        get_state(store).main_menubar(store, s->get_state(s).main_menubar)
 
     ReduxImGui.TreeNode("Basic") do
         basic_button(store, get_state)

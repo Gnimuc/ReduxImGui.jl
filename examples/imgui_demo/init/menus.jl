@@ -1,15 +1,15 @@
-const IMGUI_DEMO_MENU_OPEN_RESENT_STATES = Menus.State(
+const IMGUI_DEMO_MENU_OPEN_RESENT_STATES = Menu(
     "Open Recent",
     [
-        MenuItems.State("fish_hat.c"),
-        MenuItems.State("fish_hat.inl"),
-        MenuItems.State("fish_hat.h"),
-        Menus.State(
+        MenuItem("fish_hat.c"),
+        MenuItem("fish_hat.inl"),
+        MenuItem("fish_hat.h"),
+        Menu(
             "More..",
             [
-                MenuItems.State("Hello"),
-                MenuItems.State("Sailor"),
-                Menus.State("Recurse..", [], false)
+                MenuItem("Hello"),
+                MenuItem("Sailor"),
+                Menu("Recurse..", [], false)
             ],
             true,
         )
@@ -17,10 +17,10 @@ const IMGUI_DEMO_MENU_OPEN_RESENT_STATES = Menus.State(
     true,
 )
 
-struct ItemSeparator <: MenuItems.AbstractFakeMenuItem end
+struct ItemSeparator <: MenuItems.AbstractGenericMenuItem end
 (x::ItemSeparator)() = CImGui.Separator()
 
-mutable struct MenuOptions <: MenuItems.AbstractFakeMenuItem 
+mutable struct MenuOptions <: MenuItems.AbstractGenericMenuItem 
     enabled::Bool
     f::Cfloat
     n::Cint
@@ -43,7 +43,7 @@ function (x::MenuOptions)()
     end
 end
 
-struct MenuColors <: MenuItems.AbstractFakeMenuItem end
+struct MenuColors <: MenuItems.AbstractGenericMenuItem end
 function (x::MenuColors)()
     if CImGui.BeginMenu("Colors")
         sz = CImGui.GetTextLineHeight()
@@ -59,35 +59,35 @@ function (x::MenuColors)()
     end
 end
 
-const IMGUI_DEMO_MENU_FILE_STATES = Menus.State(
+const IMGUI_DEMO_MENU_FILE_STATES = Menu(
     "File",
     [
-        MenuItems.State("(dummy menu)", "", false),
-        MenuItems.State("New"),
-        MenuItems.State("Open", "Ctrl+O"),
+        MenuItem("(dummy menu)", "", false),
+        MenuItem("New"),
+        MenuItem("Open", "Ctrl+O"),
         IMGUI_DEMO_MENU_OPEN_RESENT_STATES,
-        MenuItems.State("Save", "Ctrl+S"),
-        MenuItems.State("Save As.."),
+        MenuItem("Save", "Ctrl+S"),
+        MenuItem("Save As.."),
         ItemSeparator(),
         MenuOptions(true, 0.5, 0, true),
         MenuColors(),
-        ToggleMenuItems.State("Checked", "", true),
-        MenuItems.State("Quit", "Alt+F4"),
+        ToggleMenuItem("Checked", "", true),
+        MenuItem("Quit", "Alt+F4"),
     ],
     true,
 )
 
 
 
-const IMGUI_DEMO_MENU_EDIT_STATES = Menus.State(
+const IMGUI_DEMO_MENU_EDIT_STATES = Menu(
     "Edit",
     [
-        MenuItems.State("Undo", "CTRL+Z"),
-        MenuItems.State("Redo", "CTRL+Y", false),
+        MenuItem("Undo", "CTRL+Z"),
+        MenuItem("Redo", "CTRL+Y", false),
         ItemSeparator(),
-        MenuItems.State("Cut", "CTRL+X"),
-        MenuItems.State("Copy", "CTRL+C"),
-        MenuItems.State("Paste", "CTRL+V"),
+        MenuItem("Cut", "CTRL+X"),
+        MenuItem("Copy", "CTRL+C"),
+        MenuItem("Paste", "CTRL+V"),
     ],
     true,
 )
@@ -97,7 +97,7 @@ const IMGUI_DEMO_MENU_STATES = [
     IMGUI_DEMO_MENU_EDIT_STATES,
 ]
 
-const IMGUI_DEMO_MAIN_MENUBAR_STATES = MainMenuBars.State(
+const IMGUI_DEMO_MAIN_MENUBAR_STATES = MainMenuBar(
     "Example: MainMenuBar",
     IMGUI_DEMO_MENU_STATES,
     false,

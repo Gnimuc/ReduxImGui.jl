@@ -1,24 +1,24 @@
 include("MenuItems.jl")
 using .MenuItems
 import .MenuItems: MenuItem
-export MenuItems
+export MenuItems, MenuItem
 
 include("ToggleMenuItems.jl")
 using .ToggleMenuItems
 import .ToggleMenuItems: ToggleMenuItem
-export ToggleMenuItems
+export ToggleMenuItems, ToggleMenuItem
 
 include("Menus.jl")
 using .Menus
 import .Menus: Menu
-export Menus
+export Menus, Menu
 
-include("MenuBars.jl")
-using .MenuBars
-import .MenuBars: MenuBar
-export MenuBars
+# include("MenuBars.jl")
+# using .MenuBars
+# import .MenuBars: MenuBar
+# export MenuBars
 
 include("MainMenuBars.jl")
 using .MainMenuBars
 import .MainMenuBars: MainMenuBar
-export MainMenuBars
+export MainMenuBars, MainMenuBar
