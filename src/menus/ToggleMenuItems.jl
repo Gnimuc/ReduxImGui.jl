@@ -95,11 +95,19 @@ reducer(s::Vector{<:AbstractMenuItemState}, a::DeleteMenuItem) = filter(s -> get
 Return `true` when triggered/activated.
 `get_state` is a router function which tells how to find the target state from `store`.
 """
-function ToggleMenuItem(store::AbstractStore, get_state=Redux.get_state)
+function ToggleMenuItem(store::AbstractStore, get_state=Redux.get_state, chain_action=identity)
     s = get_state(store)
     is_activated = CImGui.MenuItem(get_label(s), get_shortcut(s), s.is_selected, is_enabled(s))
-    dispatch!(store, MenuItems.SetTriggeredTo(get_label(s), is_activated))
-    is_activated && dispatch!(store, Toggle(get_label(s)))
+    is_activated && @show "ok"
+    dispatch!(
+        store, 
+        MenuItems.SetTriggeredTo(get_label(s), is_activated) |> chain_action,
+    )
+    is_activated && dispatch!(
+        store, 
+        Toggle(get_label(s)) |> chain_action,
+    )
+    is_activated && @show get_state(store)
     return is_activated
 end
 

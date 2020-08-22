@@ -139,21 +139,27 @@ struct ItemSeparator <: AbstractMenuItemState end
 (x::ItemSeparator)() = CImGui.Separator()
 ```
 """
-function Menu(store::AbstractStore, get_state=Redux.get_state)
+function Menu(store::AbstractStore, get_state=Redux.get_state, chain_action=identity)
     s = get_state(store)
     is_activated = CImGui.BeginMenu(s.label, s.is_enabled)
-    dispatch!(store, SetTriggeredTo(s.label, is_activated))
+    dispatch!(
+        store, 
+        SetTriggeredTo(s.label, is_activated) |> chain_action
+    )
     !is_activated && return false
     for (i, item) in enumerate(s.items)
         if item isa MenuItems.State 
-            x = CImGui.MenuItem(item.label, item.shortcut, false, item.is_enabled)
-            dispatch!(store, MenuItems.SetTriggeredTo(item.label, x))
+            MenuItems.MenuItem(
+                store, 
+                x->get_state(x).items[i], 
+                x->EditMenuItems(s.label, x) |> chain_action,
+            )
         elseif item isa ToggleMenuItems.State
-            x = CImGui.MenuItem(item.label, item.shortcut, item.is_selected, item.is_enabled)
-            x && dispatch!(store, ToggleMenuItems.Toggle(item.label))
-            dispatch!(store, MenuItems.SetTriggeredTo(item.label, x))
-        elseif item isa MenuItemSeparators.State
-            CImGui.Separator()
+            ToggleMenuItems.ToggleMenuItem(
+                store, 
+                x->get_state(x).items[i], 
+                x->EditMenuItems(s.label, x) |> chain_action,
+            )
         elseif item isa Menus.State
             Menu(store, s->get_state(s).items[i])
         elseif item isa AbstractMenuItemState

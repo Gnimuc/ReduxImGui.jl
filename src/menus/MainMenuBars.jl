@@ -105,7 +105,11 @@ function MainMenuBar(store::AbstractStore, get_state=Redux.get_state)
     dispatch!(store, SetTriggeredTo(s.label, is_activated))
     if is_activated && !s.is_hidden
         for i = 1:length(s.menus)
-            Menus.Menu(store, s->get_state(s).menus[i])
+            Menus.Menu(
+                store, 
+                x->get_state(x).menus[i],
+                x->EditMenus(s.label, x),
+            )
         end
         CImGui.EndMainMenuBar()
     end
