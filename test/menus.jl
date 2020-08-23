@@ -183,3 +183,73 @@ end
     state = get_state(store)
     @test Menus.is_enabled(state["m2"]) == true
 end
+
+@testset "Menus | MenuBar" begin
+    name = "MenuBar_test"
+    store = create_store(MenuBars.reducer, MenuBar(name))
+    state = get_state(store)
+
+    # test initial state
+    @test state.label == name
+    @test state.menus == []
+    @test state.is_hidden == false
+    @test state.is_triggered == false
+
+    # test actions
+    new_name = "MenuBar_new_name"
+    state = get_state(store)
+    dispatch!(store, MenuBars.Rename(state.label, new_name))
+    @test get_state(store).label == new_name
+    dispatch!(store, MenuBars.Rename(state.label, name))
+    @test get_state(store).label == name
+
+    dispatch!(store, MenuBars.Show(state.label))
+    @test MenuBars.is_hidden(get_state(store)) == false
+
+    dispatch!(store, MenuBars.Hide(state.label))
+    @test MenuBars.is_hidden(get_state(store)) == true
+
+    dispatch!(store, MenuBars.SetTriggeredTo(state.label, true))
+    @test MenuBars.is_triggered(get_state(store)) == true
+
+    dispatch!(store, MenuBars.EditMenus(state.label, Menus.AddMenu("m")))
+    @test get_state(store).menus[1].label == "m"
+
+    dispatch!(store, MenuBars.EditMenus(state.label, Menus.AddMenu("m2")))
+    @test get_state(store).menus[2].label == "m2"
+end
+
+@testset "Menus | MainMenuBar" begin
+    name = "MainMenuBar_test"
+    store = create_store(MainMenuBars.reducer, MainMenuBar(name))
+    state = get_state(store)
+
+    # test initial state
+    @test state.label == name
+    @test state.menus == []
+    @test state.is_hidden == false
+    @test state.is_triggered == false
+
+    # test actions
+    new_name = "MainMenuBar_new_name"
+    state = get_state(store)
+    dispatch!(store, MainMenuBars.Rename(state.label, new_name))
+    @test get_state(store).label == new_name
+    dispatch!(store, MainMenuBars.Rename(state.label, name))
+    @test get_state(store).label == name
+
+    dispatch!(store, MainMenuBars.Show(state.label))
+    @test MainMenuBars.is_hidden(get_state(store)) == false
+
+    dispatch!(store, MainMenuBars.Hide(state.label))
+    @test MainMenuBars.is_hidden(get_state(store)) == true
+
+    dispatch!(store, MainMenuBars.SetTriggeredTo(state.label, true))
+    @test MainMenuBars.is_triggered(get_state(store)) == true
+
+    dispatch!(store, MainMenuBars.EditMenus(state.label, Menus.AddMenu("m")))
+    @test get_state(store).menus[1].label == "m"
+
+    dispatch!(store, MainMenuBars.EditMenus(state.label, Menus.AddMenu("m2")))
+    @test get_state(store).menus[2].label == "m2"
+end

@@ -1,6 +1,6 @@
 module MainMenuBars
 
-Base.Experimental.@optlevel 1
+Base.Experimental.@optlevel 2
 
 using Redux
 using CImGui
@@ -101,7 +101,7 @@ get_label(s::AbstractImmutableState) = _get_label(s, is_valid(s))
 
 """
     MainMenuBar(label::AbstractString, menus = [], is_hidden = false)
-A menu state which contains a label a.k.a the identifier, a list of menus, 
+A main menu bar state which contains a label a.k.a the identifier, a list of menus, 
 a flag value `is_hidden` and a flag value `is_triggered` that records the state of
 the latest poll events.
 """
@@ -130,23 +130,26 @@ reducer(s::MainMenuBar, a::Hide) = MainMenuBar(s.label, s.menus, true, s.is_trig
 reducer(s::MainMenuBar, a::EditMenus) =
     MainMenuBar(s.label, Menus.reducer(s.menus, a.action), s.is_hidden, s.is_triggered)
 
-# helper
+## UI
 """
-    (::MainMenuBar)(store::AbstractStore, get_state=Redux.get_state) -> Bool
+    (::MainMenuBar)(store::AbstractStore, get_state=Redux.get_state, chain_action=identity) -> Bool
 Return `true` when triggered/activated.
 `get_state` is a router function that tells how to find the target state from `store`. 
 `chain_action` is for chaining upstream actions.
 """
-function (::MainMenuBar)(store::AbstractStore, get_state=Redux.get_state)
+function (::MainMenuBar)(store::AbstractStore, get_state=Redux.get_state, chain_action=identity)
     s = get_state(store)
     is_activated = CImGui.BeginMainMenuBar()
-    dispatch!(store, SetTriggeredTo(s.label, is_activated))
+    dispatch!(
+        store, 
+        SetTriggeredTo(s.label, is_activated) |> chain_action,
+    )
     if is_activated && !s.is_hidden
         for (i, menu) in enumerate(s.menus)
             menu(
                 store, 
                 x->get_state(x).menus[i],
-                x->EditMenus(s.label, x),
+                x->EditMenus(s.label, x) |> chain_action,
             )
         end
         CImGui.EndMainMenuBar()

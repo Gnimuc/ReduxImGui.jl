@@ -1,6 +1,6 @@
 module Menus
 
-Base.Experimental.@optlevel 1
+Base.Experimental.@optlevel 2
 
 using Redux
 using CImGui
