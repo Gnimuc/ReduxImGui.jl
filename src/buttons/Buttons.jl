@@ -123,7 +123,7 @@ reducer(s::Vector{<:AbstractButtonState}, a::DeleteButton) = filter(s -> get_lab
 """
     Button(store::AbstractStore, get_state=Redux.get_state) -> Bool
 Return `true` when triggered.
-`get_state` is a router function which tells how to find the target state from `store`.
+`get_state` is a router function that tells how to find the target state from `store`. `chain_action` is for chaining upstream actions.
 """
 function Button(store::AbstractStore, get_state=Redux.get_state)
     s = get_state(store)
